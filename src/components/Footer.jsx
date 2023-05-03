@@ -10,21 +10,17 @@ function Footer() {
     <footer className="Footer">
       Created by{" "}
       <a href={BGS89} target="_blank" rel="noreferrer">
-        BGS89
+        BGS89,
       </a>{" "}
-      ,
       <a href={Entelodonto} target="_blank" rel="noreferrer">
-        Entelodonto
+        Entelodonto,
       </a>{" "}
-      ,
       <a href={gumbercules35} target="_blank" rel="noreferrer">
-        gumbercules35
+        gumbercules35,
       </a>{" "}
-      ,
       <a href={SomeRandomGuy64} target="_blank" rel="noreferrer">
-        SomeRandomGuy64
+        SomeRandomGuy64 &
       </a>{" "}
-      &
       <a href={szpytmaGithub} target="_blank" rel="noreferrer">
         Szpytma
       </a>{" "}
