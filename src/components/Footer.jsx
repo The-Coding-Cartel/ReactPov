@@ -24,7 +24,7 @@ function Footer() {
       <a href={SomeRandomGuy64} target="_blank" rel="noreferrer">
         SomeRandomGuy64
       </a>{" "}
-      ,
+      &
       <a href={szpytmaGithub} target="_blank" rel="noreferrer">
         Szpytma
       </a>{" "}
