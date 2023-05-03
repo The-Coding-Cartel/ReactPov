@@ -10,7 +10,7 @@ import {
   limit,
   serverTimestamp,
 } from "@firebase/firestore";
-import { firestore } from "../firebase";
+import { firestore } from "../../firebase";
 export const mapX = 28,
   mapY = 31,
   mapS = 32;

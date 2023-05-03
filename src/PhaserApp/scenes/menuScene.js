@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { auth, googleProvider } from "../firebase";
+import { auth, googleProvider } from "../../firebase";
 import { signInWithPopup } from "firebase/auth";
 
 export class MenuScene extends Phaser.Scene {
