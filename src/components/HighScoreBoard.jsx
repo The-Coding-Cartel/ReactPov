@@ -18,17 +18,12 @@ function toDate(seconds, nanoseconds) {
   return yourDate;
 }
 
-function ScoreBoard() {
-  const users = [{ score: 360, username: "Ben Sivyer" }];
+function HighScoreBoard() {
   const [highScores, setHighScores] = useState([]);
 
   useEffect(() => {
     const scoreRef = collection(firestore, "scores");
-    const get10BestScores = query(
-      scoreRef,
-      orderBy("score", "desc"),
-      limit(20)
-    );
+    const get10BestScores = query(scoreRef, orderBy("score", "desc"), limit(5));
 
     getDocs(get10BestScores)
       .then((querySnapshot) => {
@@ -52,4 +47,4 @@ function ScoreBoard() {
   );
 }
 
-export default ScoreBoard;
+export default HighScoreBoard;
