@@ -45,9 +45,9 @@ function ScoreBoard() {
         <thead>
           <tr>
             <th scope="col">#</th>
-            <th scope="col">UserName</th>
-            <th scope="col">scores</th>
-            <th scope="col">Handle</th>
+            <th scope="col">User Name</th>
+            <th scope="col">Scores</th>
+            <th scope="col">Date</th>
           </tr>
         </thead>
         <tbody>
