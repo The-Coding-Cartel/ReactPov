@@ -37,17 +37,32 @@ function ScoreBoard() {
       })
       .catch((error) => console.log(error));
   }, []);
+  console.log(highScores);
 
   return (
     <section id="scores">
-      <ol>
-        {highScores.map((scores) => (
-          <li key={scores.posted_at.nanoseconds}>
-            {scores.username} {scores.score}{" "}
-            {toDate(scores.posted_at.seconds, scores.posted_at.nanoseconds)}
-          </li>
-        ))}
-      </ol>
+      <table class="table" id="">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">UserName</th>
+            <th scope="col">scores</th>
+            <th scope="col">Handle</th>
+          </tr>
+        </thead>
+        <tbody>
+          {highScores.map((scores, index) => (
+            <tr key={scores.posted_at.nanoseconds}>
+              <th scope="row">{index + 1}</th>
+              <td>{scores.username}</td>
+              <td>{scores.score}</td>
+              <td>
+                {toDate(scores.posted_at.seconds, scores.posted_at.nanoseconds)}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </section>
   );
 }
