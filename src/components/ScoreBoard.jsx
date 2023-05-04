@@ -7,10 +7,17 @@ import {
   getDocs,
 } from "@firebase/firestore";
 import { firestore } from "../firebase";
+import moment from "moment";
 
 function toDate(seconds, nanoseconds) {
   console.log(seconds, nanoseconds);
-  return new Date(seconds * 1000 + nanoseconds / 1000000).toTimeString();
+
+  let yourDate = moment(
+    new Date(seconds * 1000 + nanoseconds / 1000000).toLocaleDateString(),
+    "D/M/YYYY"
+  ).format("DD-MM-YYYY");
+
+  return yourDate;
 }
 
 function ScoreBoard() {
