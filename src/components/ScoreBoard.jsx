@@ -15,16 +15,12 @@ function toDate(seconds, nanoseconds) {
     new Date(seconds * 1000 + nanoseconds / 1000000).toLocaleDateString(),
     "D/M/YYYY"
   ).format("DD-MM-YYYY");
-  //   console.log(nanoseconds, seconds);
-
   return yourDate;
 }
 
 function ScoreBoard() {
   const [highScores, setHighScores] = useState([]);
   const [searchUser, setSearchUser] = useState("");
-
-  console.log(searchUser);
 
   useEffect(() => {
     const scoreRef = collection(firestore, "scores");
@@ -43,12 +39,14 @@ function ScoreBoard() {
   }, []);
 
   function handleSubmit(e) {
+    const user = searchUser;
+    const endUser = user + "/uf8ff";
     e.preventDefault();
     const scoreRef = collection(firestore, "scores");
     const getScoresByUsers = query(
       scoreRef,
-      where("username", "==", searchUser)
-      //   orderBy("score", "asc")
+      where("username", ">=", searchUser),
+      where("username", "<", endUser)
     );
     getDocs(getScoresByUsers)
       .then((querySnapshot) => {

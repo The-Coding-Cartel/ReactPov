@@ -20,7 +20,6 @@ function toDate(seconds, nanoseconds) {
 
 function HighScoreBoard() {
   const [highScores, setHighScores] = useState([]);
-
   useEffect(() => {
     const scoreRef = collection(firestore, "scores");
     const get10BestScores = query(scoreRef, orderBy("score", "desc"), limit(5));
