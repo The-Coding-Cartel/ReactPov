@@ -32,6 +32,7 @@ function ScoreBoard() {
     try {
       const scoresByUserArr = await getScoresByUser(searchUser);
       setScores(scoresByUserArr.sort((a, b) => b.score - a.score));
+      setSearchUser(searchUser);
     } catch (error) {
       console.log(error);
     }
