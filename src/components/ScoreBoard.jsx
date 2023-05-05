@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import moment from "moment";
-import { getScores, getScoresByUser } from "../db";
+import { getScores, getScoresByUser, orderByNameDesc } from "../db";
 
 function toDate(seconds, nanoseconds) {
   let yourDate = moment(
@@ -11,12 +11,12 @@ function toDate(seconds, nanoseconds) {
 }
 
 function ScoreBoard() {
-  const [highScores, setHighScores] = useState([]);
+  const [scores, setScores] = useState([]);
   const [searchUser, setSearchUser] = useState("");
 
   useEffect(() => {
     getScores()
-      .then((scores) => setHighScores(scores))
+      .then((scores) => setScores(scores))
       .catch((error) => console.log(error));
   }, []);
 
@@ -24,7 +24,18 @@ function ScoreBoard() {
     e.preventDefault();
     try {
       const scoresByUserArr = await getScoresByUser(searchUser);
-      setHighScores(scoresByUserArr);
+      setScores(scoresByUserArr.sort((a, b) => b.score - a.score));
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function handleClick() {
+    try {
+      console.log("click");
+      const scoresByUserArr = await orderByNameDesc();
+      setScores(scoresByUserArr);
+      console.log(scoresByUserArr);
     } catch (error) {
       console.log(error);
     }
@@ -48,13 +59,16 @@ function ScoreBoard() {
         <thead>
           <tr>
             <th scope="col">#</th>
-            <th scope="col">User Name</th>
+            <th scope="col">
+              User Name<button onClick={handleClick}></button>
+            </th>
+
             <th scope="col">Scores</th>
             <th scope="col">Date</th>
           </tr>
         </thead>
         <tbody>
-          {highScores.map((score, index) => (
+          {scores.map((score, index) => (
             <tr key={index}>
               <th scope="row">{index + 1}</th>
               <td>{score.username}</td>

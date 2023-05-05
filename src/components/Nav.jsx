@@ -1,10 +1,32 @@
 function Nav() {
   return (
-    <div className="list-group-item list-group-item-action">
-      <a href="#root-id">Play </a>
-      <a href="#scores">Score Board </a>
-      <a href="#about">About </a>
-    </div>
+    <>
+      <div>
+        <nav className="navbar navbar-expand-sm navbar-light bg-light">
+          <a className="navbar-brand" href="#root-id">
+            Navbar
+          </a>
+          <div
+            className="collapse navbar-collapse navbar-nav"
+            id="navbarTogglerDemo02"
+          >
+            <a className="nav-link" href="#root-id">
+              Play <span className="sr-only"></span>
+            </a>
+
+            <a className="nav-link" href="#high-scores">
+              High Scores
+            </a>
+            <a className="nav-link" href="#scores">
+              Scores
+            </a>
+            <a className="nav-link" href="#about">
+              About
+            </a>
+          </div>
+        </nav>
+      </div>
+    </>
   );
 }
 

@@ -20,7 +20,7 @@ function HighScoreBoard() {
   }, []);
 
   return (
-    <section id="scores">
+    <section id="high-scores">
       <ol>
         {highScores.map((scores) => (
           <li key={scores.posted_at.nanoseconds}>
