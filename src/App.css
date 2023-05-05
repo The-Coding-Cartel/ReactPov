@@ -2,20 +2,23 @@
   text-align: center;
 }
 
-header {
+.Header {
+  background-color: black;
+}
+
+.Nav {
   border: 1px solid black;
   margin: 5px;
   padding: 1rem;
+  background-color: crimson;
 }
 
-nav {
-  border: 1px solid black;
-  margin: 5px;
-  padding: 1rem;
+#root-id {
+  background-image: url("https://img.freepik.com/free-photo/grunge-scratched-cracked-texture-background_1048-15879.jpg?w=1380&t=st=1683301556~exp=1683302156~hmac=a26b2bccb53cb8030fd2d4f6e244c9d2d9306b7fcd0e05236c25c0218dfe6631");
 }
-
 #user-icon {
   border: 1px solid black;
+  background-color: #c0c0c0;
   border-radius: 50%;
   width: 50px;
   height: 50px;

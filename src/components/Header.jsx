@@ -2,10 +2,10 @@ import Nav from "./Nav";
 
 function Header() {
   return (
-    <header>
-      <h1>POVMAN!</h1>
+    <header className="Header">
+      <img src="/povmaze-header.png" alt="POVMAZE!"></img>
       <div id="user-icon">User</div>
-      <Nav />
+      <Nav className="Nav" />
     </header>
   );
 }
