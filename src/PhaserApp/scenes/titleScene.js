@@ -6,19 +6,27 @@ export class TitleScene extends Phaser.Scene {
     this.background = null;
   }
 
-  init() {
-    this.cameras.main.setBackgroundColor("#4E68E0");
-    this.background = this.add.sprite(0, 0, "title-img");
-    this.background.x = 400;
-    this.background.y = 300;
+  init() {}
+
+  preload() {
+    this.load.image("googleloginbutton", "./googleloginbutton.png");
   }
 
-  preload() {}
-
-  create() {}
+  create() {
+    this.background = this.add.image(
+      this.cameras.main.width / 2,
+      this.cameras.main.height / 2 + 10,
+      "title-img"
+    );
+    let scaleX = this.cameras.main.width / this.background.width;
+    let scaleY = this.cameras.main.height / this.background.height;
+    let scale = Math.max(scaleX, scaleY);
+    this.background.setScale(scale).setScrollFactor(0);
+    this.cameras.main.setBackgroundColor("#000000");
+  }
 
   update(time, delta) {
-    if (time > 3000) {
+    if (time > 5000) {
       this.scene.switch("menuScene");
     }
   }

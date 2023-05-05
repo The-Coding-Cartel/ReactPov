@@ -11,14 +11,10 @@ import {
   serverTimestamp,
 } from "@firebase/firestore";
 import { firestore } from "../../firebase";
-export const mapX = 28,
-  mapY = 31,
-  mapS = 32;
 
 export class GameScene extends Phaser.Scene {
   constructor() {
     super("gameScene");
-    this.direction = "up";
     this.enemyDirection = "up";
     this.scoreLabel = null;
     this.ghostSpawner = null;
@@ -31,49 +27,146 @@ export class GameScene extends Phaser.Scene {
     this.music = null;
     this.cursors = null;
     this.player = null;
-    this.scoreLabel = null;
+
     this.powerPills = null;
     this.raycaster = null;
     this.ray = null;
+
+    this.fov = -30;
+    this.playerAngle = 0;
+    this.keyPress = false;
   }
   init(data) {
-    this.cameras.main.setBackgroundColor("#000000");
+    if (this.music?.isPlaying) {
+      this.music.stop();
+    }
+    this.currentLevel = data.level;
+    this.cameras.main.setBackgroundColor("#4E68E0");
     this.username = data.username;
+
+    this.cursors = this.input.keyboard.createCursorKeys();
+    this.leftRotate = this.input.keyboard.addKey("Q");
+    this.rightRotate = this.input.keyboard.addKey("E");
+
+    this.cursors.up.on("up", () => {
+      if (this.footsteps.isPlaying) {
+        this.footsteps.stop();
+      }
+    });
+
+    this.cursors.down.on("up", () => {
+      if (this.footsteps.isPlaying) {
+        this.footsteps.stop();
+      }
+    });
+
+    this.cursors.left.on("up", () => {
+      if (this.footsteps.isPlaying) {
+        this.footsteps.stop();
+      }
+    });
+
+    this.cursors.right.on("up", () => {
+      if (this.footsteps.isPlaying) {
+        this.footsteps.stop();
+      }
+    });
+
+    this.leftRotate.on("up", () => {
+      if (this.playerAngle === 0) {
+        this.playerAngle = 270;
+      } else {
+        this.playerAngle += -90;
+      }
+    });
+
+    this.rightRotate.on("up", () => {
+      if (this.playerAngle === 270) {
+        this.playerAngle = 0;
+      } else {
+        this.playerAngle += 90;
+      }
+    });
   }
 
   preload() {
     this.canvas = this.sys.game.canvas;
+    this.load.tilemapTiledJSON(
+      `tilemap${this.currentLevel}`,
+      `./maze${this.currentLevel}.json`
+    );
+    this.load.audio("footsteps", "./footsteps.mp3");
   }
 
-  create() {
+  create(data) {
+    this.add.rectangle(0, 0, this.canvas.width * 2, 540, 0x00cccc);
+    this.add.rectangle(0, 540, this.canvas.width * 2, 540, 0xdddddd);
+    this.graphics = this.add.graphics();
+    this.collectGraphics = this.add.graphics();
+
     const newMap = this.make.tilemap({
-      key: "tilemap",
+      key: `tilemap${this.currentLevel}`,
     });
     const tileSet = newMap.addTilesetImage("maze", "tiles");
-    newMap.createLayer("floor", tileSet);
+    newMap.createLayer("floor", tileSet).setVisible(false);
     this.wallsLayer = newMap.createLayer("walls", tileSet);
-    this.wallsLayer.setCollisionByProperty({ collides: true });
+    this.wallsLayer
+      .setCollisionByProperty({ collides: true })
+      .setVisible(false);
 
     this.coins = this.physics.add.staticGroup();
+    this.powerPills = this.physics.add.staticGroup();
+    this.ghostSpawner = new GhostSpawner(this, "ghost");
+    this.ghostGroup = this.ghostSpawner.group.setVisible(false);
 
     newMap.filterTiles((tile) => {
-      if (tile.index === -1) {
-        this.coins.create(
-          tile.pixelX + tile.width / 2,
-          tile.pixelY + tile.width / 2,
-          "coin"
-        );
+      switch (tile.index) {
+        case 3:
+          this.coins
+            .create(
+              tile.pixelX + tile.width / 2,
+              tile.pixelY + tile.width / 2,
+              "coin"
+            )
+            .setCircle(15);
+          break;
+        case 4:
+          this.player = this.createPlayer(
+            tile.pixelX + tile.width / 2,
+            tile.pixelY + tile.width / 2
+          );
+          break;
+        case 5:
+          let currentGhost = this.ghostSpawner.spawn(
+            tile.pixelX + tile.width / 2,
+            tile.pixelY + tile.width / 2
+          );
+
+          break;
+        case 6:
+          this.powerPills.create(
+            tile.pixelX + tile.width / 2,
+            tile.pixelY + tile.width / 2,
+            "powerPill"
+          );
+          break;
+        default:
+          break;
       }
     });
-    this.ghostSpawner = new GhostSpawner(this, "ghost");
-    this.ghostGroup = this.ghostSpawner.group;
-    for (let i = 0; i < 3; i++) {
-      this.ghostSpawner.spawn();
-    }
-    this.cursors = this.input.keyboard.createCursorKeys();
-    this.player = this.createPlayer(430, 425);
-    this.scoreLabel = this.createScoreLabel(16, 16, 0);
-    this.music = this.sound.add("background-music", { loop: true });
+    this.powerPills.setVisible(false);
+
+    this.coins.setVisible(false);
+    this.ghostGroup.setVisible(false);
+
+    this.player.setBounce(0);
+    this.player.setDrag(0);
+    this.player.setVisible(false);
+    this.scoreLabel = this.createScoreLabel(16, 16, data.score || 0);
+    this.music = this.sound.add("background-music", {
+      loop: true,
+      volume: 0.5,
+    });
     this.music.play();
 
     this.physics.add.overlap(
@@ -108,72 +201,110 @@ export class GameScene extends Phaser.Scene {
       this
     );
 
+    this.footsteps = this.sound.add("footsteps", { loop: true, volume: 2 });
+
     this.createRaycaster();
   }
 
   update() {
     const ghostsArray = this.ghostGroup.getChildren();
-    this.playerMovement(this.cursors);
+    if (!this.hasHit) {
+      this.playerMovement(this.cursors);
+      console.log(this.player.body.speed);
+      this.updateRaycaster();
+    }
     ghostsArray.forEach((ghost) => {
       this.enemyMovement(ghost);
     });
-
-    this.physics.world.wrap(this.player, 0);
-    this.updateRaycaster();
   }
 
   createPlayer(xPos, yPos) {
-    const player = this.physics.add.sprite(xPos, yPos, "povman").setScale(0.96);
-    player.setCircle(15);
+    const player = this.physics.add.sprite(xPos, yPos, "povman").setScale(0.6);
+    player.setCircle(12);
     return player;
   }
 
   playerMovement(cursors) {
-    const speed = 125;
+    const speed = 125 / 2;
     this.player.setVelocity(0);
-
-    switch (this.direction) {
-      case "up":
-        this.ray.setAngleDeg(270);
-        this.player.setVelocityY(-speed);
-        break;
-      case "down":
-        this.ray.setAngleDeg(90);
-        this.player.setVelocityY(speed);
-        break;
-      case "left":
-        this.ray.setAngleDeg(180);
-        this.player.setVelocityX(-speed);
-        break;
-      case "right":
-        this.ray.setAngleDeg(0);
-        this.player.setVelocityX(speed);
-        break;
+    if (
+      cursors.up.isDown ||
+      cursors.down.isDown ||
+      cursors.left.isDown ||
+      cursors.right.isDown
+    ) {
+      if (!this.footsteps.isPlaying) {
+        this.footsteps.play();
+      }
     }
 
     if (cursors.up.isDown) {
-      this.player.setVelocityY(-speed);
-
-      this.direction = "up";
+      switch (this.playerAngle) {
+        case 270:
+          this.player.setVelocityY(-speed);
+          break;
+        case 90:
+          this.player.setVelocityY(speed);
+          break;
+        case 180:
+          this.player.setVelocityX(-speed);
+          break;
+        case 0:
+          this.player.setVelocityX(speed);
+          break;
+      }
     } else if (cursors.down.isDown) {
-      this.player.setVelocityY(speed);
-
-      this.direction = "down";
+      switch (this.playerAngle) {
+        case 270:
+          this.player.setVelocityY(speed);
+          break;
+        case 90:
+          this.player.setVelocityY(-speed);
+          break;
+        case 180:
+          this.player.setVelocityX(speed);
+          break;
+        case 0:
+          this.player.setVelocityX(-speed);
+          break;
+      }
     }
 
     if (cursors.left.isDown) {
-      this.player.setVelocityX(-speed);
-
-      this.direction = "left";
+      switch (this.playerAngle) {
+        case 270:
+          this.player.setVelocityX(-speed);
+          break;
+        case 90:
+          this.player.setVelocityX(speed);
+          break;
+        case 180:
+          this.player.setVelocityY(speed);
+          break;
+        case 0:
+          this.player.setVelocityY(-speed);
+          break;
+      }
     } else if (cursors.right.isDown) {
-      this.player.setVelocityX(speed);
-
-      this.direction = "right";
+      switch (this.playerAngle) {
+        case 270:
+          this.player.setVelocityX(speed);
+          break;
+        case 90:
+          this.player.setVelocityX(-speed);
+          break;
+        case 180:
+          this.player.setVelocityY(-speed);
+          break;
+        case 0:
+          this.player.setVelocityY(speed);
+          break;
+      }
     }
   }
 
   enemyMovement(ghost) {
-    const speed = 125;
+    const speed = 50;
     ghost.setVelocity(0);
 
     switch (ghost.direction) {
@@ -190,6 +321,13 @@ export class GameScene extends Phaser.Scene {
         ghost.setVelocityX(speed);
         break;
     }
+
+    const ghostDistance = Phaser.Math.Distance.Between(
+      this.player.x,
+      this.player.y,
+      ghost.x,
+      ghost.y
+    );
   }
 
   collectCoin(player, coin) {
@@ -198,46 +336,76 @@ export class GameScene extends Phaser.Scene {
   }
 
   collectPowerPill(player, powerPill) {
-    powerPill.disableBody(true, true);
-    this.poweredUp = true;
-    this.player.setTint(0xff4444);
-    this.time.addEvent({
-      delay: 8000,
-      callback: () => {
-        this.poweredUp = false;
-        this.player.clearTint();
-      },
-      callbackScope: this,
-      loop: false,
-    });
-  }
-
-  hitGhost(player, ghost) {
-    if (!this.hasHit && !this.poweredUp) {
-      this.physics.pause();
-      player.setTint(0xff4444);
-      this.submitScore(this.scoreLabel.score);
-      this.gameOverText = this.add
-        .text(this.canvas.width / 2, this.canvas.height / 2, "Game Over", {
-          font: "100px Arial",
-          strokeThickness: 2,
-          color: "#000000",
-          backgroundColor: "#ffffff",
-        })
+    if (this.currentLevel < 5) {
+      this.add
+        .text(
+          this.cameras.main.width / 2,
+          this.cameras.main.height / 2,
+          `Congrats Moving to Level ${this.currentLevel + 1}`,
+          {
+            font: "50px Arial",
+            strokeThickness: 2,
+            color: "#000000",
+            backgroundColor: "#ffffff",
+          }
+        )
         .setOrigin(0.5);
-      this.hasHit = true;
-    } else if (this.poweredUp && !this.hasHit) {
-      ghost.destroy();
-      this.scoreLabel.add(10);
       this.time.addEvent({
-        delay: 3000,
+        delay: 2000,
         callback: () => {
-          this.ghostSpawner.spawn();
+          this.music.stop();
+          this.scene.start("gameScene", {
+            username: this.username,
+            level: this.currentLevel + 1,
+            score: this.scoreLabel.score,
+          });
         },
         callbackScope: this,
         loop: false,
       });
+    } else {
+      this.hitGhost(this.player);
     }
+  }
+
+  hitGhost(player, ghost) {
+    this.hasHit = true;
+    this.player.disableBody();
+    this.raycaster.removeMappedObjects(this.wallsLayer);
+    player.setTint(0xff4444);
+    this.submitScore(this.scoreLabel.score);
+    this.gameOverText = this.add
+      .text(this.canvas.width / 2, this.canvas.height / 2, "Game Over", {
+        font: "100px Arial",
+        strokeThickness: 2,
+        color: "#000000",
+        backgroundColor: "#ffffff",
+      })
+      .setOrigin(0.5);
+    this.playAgain = this.add
+      .text(
+        this.canvas.width / 2,
+        this.canvas.height / 2 + 100,
+        "Play Again?",
+        {
+          font: "100px Arial",
+          strokeThickness: 2,
+          color: "#000000",
+          backgroundColor: "#ffffff",
+        }
+      )
+      .setOrigin(0.5);
+    this.playAgain.setInteractive({ useHandCursor: true });
+    this.playAgain.on("pointerup", () => {
+      this.music.stop();
+      this.hasHit = false;
+      this.scene.start("gameScene", {
+        username: this.username,
+        level: 1,
+        score: 0,
+      });
+    });
+    this.physics.pause();
   }
 
   changeDir(ghost, wall) {
@@ -248,7 +416,7 @@ export class GameScene extends Phaser.Scene {
 
   createScoreLabel(x, y, score) {
     const style = { fontSize: "32px", fill: "#000" };
-    const label = new ScoreLabel(this, x, y, score, style);
+    const label = new ScoreLabel(this, 350, y, score, style).setOrigin(0.5);
     this.add.existing(label);
     return label;
   }
@@ -284,53 +452,106 @@ export class GameScene extends Phaser.Scene {
       .catch((err) => console.log(err));
   }
 
+  createSquare(intersection) {
+    this.graphics.clear();
+
+    for (let i = 0; i < intersection.length; i++) {
+      let distance = Phaser.Math.Distance.Between(
+        this.ray.origin.x,
+        this.ray.origin.y,
+        intersection[i]?.x || 0,
+        intersection[i]?.y || 0
+      );
+
+      let ca = this.playerAngle - this.fov;
+      ca = ca * 0.0174533;
+
+      if (ca < 0) {
+        ca += 2 * Math.PI;
+      }
+
+      if (ca > 2 * Math.PI) {
+        ca -= 2 * Math.PI;
+      }
+
+      // let adjustedDistance = distance * Math.cos(ca);  -- Fish Eye
+
+      let inverse = (32 * 320) / distance;
+      if (intersection[i].object.type === "TilemapLayer") {
+        const inverseClamp = Math.floor(Phaser.Math.Clamp(inverse, 0, 255));
+
+        const hex = this.RGBtoHex(inverseClamp, 0, 0);
+        this.graphics.lineStyle(5, 0xff00ff, 1.0);
+        this.graphics.fillStyle(Number(hex));
+        this.graphics.fillRect(
+          0 + i * 2.8125,
+          262.5,
+          2.8125,
+          Phaser.Math.Clamp(inverse, 0, 496)
+        );
+        this.graphics.fillRect(
+          0 + i * 2.8125,
+          262.5,
+          2.8125,
+          Phaser.Math.Clamp(-inverse, -496, 0)
+        );
+      } else if (intersection[i].object.type !== "TilemapLayer") {
+        const inverseClamp = Math.floor(Phaser.Math.Clamp(inverse, 0, 255));
+        const hex = this.RGBtoHex(0, inverseClamp, 0);
+        this.graphics.lineStyle(5, 0xff00ff, 1.0);
+        this.graphics.fillStyle(Number(hex));
+        this.graphics.fillRect(
+          0 + i * 2.8125,
+          262.5,
+          2.8125,
+          Phaser.Math.Clamp(inverse, 0, 496)
+        );
+        this.graphics.fillRect(
+          0 + i * 2.8125,
+          262.5,
+          2.8125,
+          Phaser.Math.Clamp(-inverse, -496, 0)
+        );
+      }
+    }
+  }
+
   createRaycaster() {
-    this.raycaster = this.raycasterPlugin.createRaycaster({ debug: true });
+    this.raycaster = this.raycasterPlugin.createRaycaster();
     this.ray = this.raycaster.createRay();
     this.raycaster.mapGameObjects(this.wallsLayer, false, {
-      collisionTiles: [1],
+      collisionTiles: [2],
     });
+    this.raycaster.mapGameObjects(this.ghostGroup.getChildren(), true);
     this.ray.setOrigin(this.player.x, this.player.y);
     this.ray.setAngleDeg(0);
-    this.ray.setConeDeg(45);
-
-    let intersection = this.ray.castCone();
   }
 
   updateRaycaster() {
+    const intersections = [];
+    for (let i = 0; i < 480; i++) {
+      this.ray.setAngleDeg(this.fov);
+      const intersect = this.ray.cast();
+      intersections.push(intersect);
+      this.fov += 0.1875;
+    }
+    this.fov = this.playerAngle - 45;
     this.ray.setOrigin(this.player.x, this.player.y);
 
-    let intersection = this.ray.castCone();
+    this.createSquare(intersections);
+  }
+
+  colorToHex(color) {
+    const hexadecimal = color.toString(16);
+    return hexadecimal.length == 1 ? "0" + hexadecimal : hexadecimal;
+  }
+
+  RGBtoHex(red, green, blue) {
+    return (
+      "0x" +
+      this.colorToHex(red) +
+      this.colorToHex(green) +
+      this.colorToHex(blue)
+    );
   }
 }
-
-// drawMap(scene, map, mapX, mapY, mapS) {
-//   const graphics = scene.add.graphics();
-//   const walls = this.physics.add.staticGroup();
-//   this.powerPills = this.physics.add.staticGroup();
-//   this.coins = this.physics.add.staticGroup();
-
-//   graphics.fillStyle(0xffffff, 1); // Fill color and alpha
-//   graphics.lineStyle(1, 0x000000, 1); // Line width, color, and alpha
-//   for (let i = 0; i < map.length; i++) {
-//     const x = (i % mapX) * mapS;
-//     const y = Math.floor(i / mapX) * mapS;
-//     graphics.strokeRect(x, y, mapS, mapS);
-
-//     switch (map[i]) {
-//       case 0:
-//         this.coins.create(x + mapS / 2, y + mapS / 2, "coin");
-//         graphics.fillRect(x, y, mapS, mapS);
-//         break;
-//       case 1:
-//         walls.create(x + mapS / 2, y + mapS / 2, "wall");
-//         break;
-//       case 5:
-//         graphics.fillRect(x, y, mapS, mapS);
-//         this.powerPills.create(x + mapS / 2, y + mapS / 2, "powerPill");
-//         break;
-//     }
-//   }
-//   scene.add.existing(graphics);
-//   return walls;
-// }
