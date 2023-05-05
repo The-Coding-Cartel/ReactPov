@@ -30,5 +30,8 @@ export const getScoresByUser = async (username) => {
     where("username", "<", endUser)
   );
   const snapshot = await getDocs(queryRef);
-  return snapshot.docs.map((doc) => doc.data());
+  return snapshot.docs.map((doc) => {
+    console.log(doc.data());
+    return doc.data();
+  });
 };

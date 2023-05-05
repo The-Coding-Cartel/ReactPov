@@ -60,7 +60,7 @@ function ScoreBoard() {
               <td>{score.username}</td>
               <td>{score.score}</td>
               <td>
-                {/* {toDate(score.posted_at.seconds, score.posted_at.nanoseconds)} */}
+                {toDate(score.posted_at.seconds, score.posted_at.nanoseconds)}
               </td>
             </tr>
           ))}
