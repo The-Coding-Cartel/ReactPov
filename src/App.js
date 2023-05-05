@@ -10,7 +10,7 @@ function App() {
   return (
     <div id="App" className="App">
       <Header />
-      <AppBridge width={896} height={992} />
+      <AppBridge width={1350} height={750} />
       <HighScoreBoard />
       <ScoreBoard />
       <About />
