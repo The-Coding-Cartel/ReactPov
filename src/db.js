@@ -8,6 +8,12 @@ import {
 } from "firebase/firestore";
 import { firestore } from "./firebase";
 
+export const getScores = async () => {
+  const scoreRef = collection(firestore, "scores");
+  const queryRef = query(scoreRef, orderBy("posted_at", "desc"), limit(25));
+  const snapshot = await getDocs(queryRef);
+  return snapshot.docs.map((doc) => doc.data());
+};
 export const getTopScores = async () => {
   const scoreRef = collection(firestore, "scores");
   const queryRef = query(scoreRef, orderBy("score", "desc"), limit(10));

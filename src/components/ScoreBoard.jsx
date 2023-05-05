@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import moment from "moment";
-import { getTopScores, getScoresByUser } from "../db";
+import { getScores, getScoresByUser } from "../db";
 
 function toDate(seconds, nanoseconds) {
   let yourDate = moment(
@@ -15,7 +15,7 @@ function ScoreBoard() {
   const [searchUser, setSearchUser] = useState("");
 
   useEffect(() => {
-    getTopScores()
+    getScores()
       .then((scores) => setHighScores(scores))
       .catch((error) => console.log(error));
   }, []);
