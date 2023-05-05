@@ -5,6 +5,7 @@ import Footer from "./components/Footer";
 import Header from "./components/Header";
 import HighScoreBoard from "./components/HighScoreBoard";
 import ScoreBoard from "./components/ScoreBoard";
+import Scores from "./components/Scores";
 
 function App() {
   return (

@@ -27,6 +27,10 @@ function ScoreBoard() {
       .catch((error) => console.log(error));
   }, []);
 
+  //TODO implement goToNext and goToPrevious
+  async function goToNext() {}
+  async function goToPrevious() {}
+
   async function handleSubmit(e) {
     e.preventDefault();
     try {
@@ -70,7 +74,7 @@ function ScoreBoard() {
   }
 
   return (
-    <section id="scores">
+    <section className="ScoreBoard" id="scores">
       <form onSubmit={handleSubmit}>
         <label htmlFor="user-search">Search User: </label>
         <input
@@ -121,6 +125,21 @@ function ScoreBoard() {
           ))}
         </tbody>
       </table>
+      <nav aria-label="Page navigation example">
+        <ul className="pagination">
+          <li className="page-item">
+            <button className="page-link" onClick={goToPrevious}>
+              Previous
+            </button>
+          </li>
+
+          <li className="page-item load-more">
+            <button className="page-link" onClick={goToNext}>
+              Next
+            </button>
+          </li>
+        </ul>
+      </nav>
     </section>
   );
 }

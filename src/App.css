@@ -57,3 +57,54 @@ nav {
   color: #fff;
   text-decoration: none;
 }
+.Scores {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+
+  align-items: center;
+}
+
+.ScoreBoard {
+  grid-column: 2/4;
+  text-align: center;
+  align-items: center;
+}
+
+.HighScoreBoard {
+  text-align: center;
+  align-items: center;
+}
+
+.HighScoreBoard ol {
+  padding: 0;
+  margin-left: 3rem;
+}
+
+.HighScoreBoard li {
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.HighScoreBoard li:first-child {
+  background-color: #ffd700;
+  font-weight: bold;
+}
+
+.HighScoreBoard li:nth-child(2) {
+  background-color: #c0c0c0;
+}
+
+.HighScoreBoard li:nth-child(3) {
+  background-color: #cd7f32;
+}
+
+.HighScoreBoard li span {
+  margin-left: 1rem;
+  font-weight: normal;
+  font-size: 1rem;
+}

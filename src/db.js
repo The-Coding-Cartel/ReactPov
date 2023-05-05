@@ -11,7 +11,7 @@ import { firestore } from "./firebase";
 const scoreRef = collection(firestore, "scores");
 
 export const getScores = async () => {
-  const queryRef = query(scoreRef, orderBy("score", "desc"), limit(10));
+  const queryRef = query(scoreRef, orderBy("score", "desc"), limit(5));
   const { docs } = await getDocs(queryRef);
   return docs.map((doc) => doc.data());
 };

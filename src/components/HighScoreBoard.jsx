@@ -20,11 +20,12 @@ function HighScoreBoard() {
   }, []);
 
   return (
-    <section id="high-scores">
+    <section className="HighScoreBoard" id="high-score">
+      <h2>High Scores!</h2>
       <ol>
-        {highScores.map((scores) => (
-          <li key={scores.posted_at.nanoseconds}>
-            {scores.username} {scores.score}{" "}
+        {highScores.map((scores, index) => (
+          <li key={index}>
+            {scores.username} Score:{scores.score} points! at{" "}
             {toDate(scores.posted_at.seconds, scores.posted_at.nanoseconds)}
           </li>
         ))}
