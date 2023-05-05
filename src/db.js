@@ -11,12 +11,12 @@ import { firestore } from "./firebase";
 const scoreRef = collection(firestore, "scores");
 
 export const getScores = async () => {
-  const queryRef = query(scoreRef, orderBy("score", "desc"), limit(20));
+  const queryRef = query(scoreRef, orderBy("score", "desc"), limit(10));
   const snapshot = await getDocs(queryRef);
   return snapshot.docs.map((doc) => doc.data());
 };
 export const getTopScores = async () => {
-  const queryRef = query(scoreRef, orderBy("score", "desc"), limit(10));
+  const queryRef = query(scoreRef, orderBy("score", "desc"), limit(5));
   const snapshot = await getDocs(queryRef);
   return snapshot.docs.map((doc) => doc.data());
 };
@@ -25,7 +25,8 @@ export const getScoresByUser = async (username) => {
   const queryRef = query(
     scoreRef,
     where("username", ">=", username),
-    where("username", "<", endUser)
+    where("username", "<", endUser),
+    limit(5)
   );
   const snapshot = await getDocs(queryRef);
   return snapshot.docs.map((doc) => {
@@ -34,24 +35,24 @@ export const getScoresByUser = async (username) => {
 };
 
 export const orderByNameDesc = async () => {
-  const queryRef = query(scoreRef, orderBy("username", "desc"), limit(20));
+  const queryRef = query(scoreRef, orderBy("username", "desc"), limit(5));
   const snapshot = await getDocs(queryRef);
   return snapshot.docs.map((doc) => doc.data());
 };
 
 export const orderByNameAsc = async () => {
-  const queryRef = query(scoreRef, orderBy("username", "asc"), limit(20));
+  const queryRef = query(scoreRef, orderBy("username", "asc"), limit(5));
   const snapshot = await getDocs(queryRef);
   return snapshot.docs.map((doc) => doc.data());
 };
 
 export const orderByScoreAsc = async () => {
-  const queryRef = query(scoreRef, orderBy("score", "asc"), limit(20));
+  const queryRef = query(scoreRef, orderBy("score", "asc"), limit(5));
   const snapshot = await getDocs(queryRef);
   return snapshot.docs.map((doc) => doc.data());
 };
 export const orderByScoreDesc = async () => {
-  const queryRef = query(scoreRef, orderBy("score", "desc"), limit(20));
+  const queryRef = query(scoreRef, orderBy("score", "desc"), limit(5));
   const snapshot = await getDocs(queryRef);
   return snapshot.docs.map((doc) => doc.data());
 };

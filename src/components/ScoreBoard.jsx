@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
 import moment from "moment";
-import { getScores, getScoresByUser, orderByNameDesc } from "../db";
+import {
+  getScores,
+  getScoresByUser,
+  orderByNameDesc,
+  orderByNameAsc,
+} from "../db";
 
 function toDate(seconds, nanoseconds) {
   let yourDate = moment(
@@ -30,10 +35,20 @@ function ScoreBoard() {
     }
   }
 
-  async function handleClick() {
+  async function handleClickDesc() {
     try {
       console.log("click");
       const scoresByUserArr = await orderByNameDesc();
+      setScores(scoresByUserArr);
+      console.log(scoresByUserArr);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async function handleClickAsc() {
+    try {
+      console.log("click");
+      const scoresByUserArr = await orderByNameAsc();
       setScores(scoresByUserArr);
       console.log(scoresByUserArr);
     } catch (error) {
@@ -60,7 +75,13 @@ function ScoreBoard() {
           <tr>
             <th scope="col">#</th>
             <th scope="col">
-              User Name<button onClick={handleClick}></button>
+              User Name
+              <button onClick={handleClickDesc} value="descending">
+                -
+              </button>
+              <button onClick={handleClickAsc} value="ascending">
+                +
+              </button>
             </th>
 
             <th scope="col">Scores</th>
