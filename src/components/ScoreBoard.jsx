@@ -1,6 +1,12 @@
 import { useState, useEffect } from "react";
 import moment from "moment";
-import { getScores, getScoresByUser, orderByName } from "../db";
+import {
+  getScores,
+  getScoresByUser,
+  orderByName,
+  orderByScore,
+  orderByDate,
+} from "../db";
 
 function toDate(seconds, nanoseconds) {
   let yourDate = moment(
@@ -13,7 +19,7 @@ function toDate(seconds, nanoseconds) {
 function ScoreBoard() {
   const [scores, setScores] = useState([]);
   const [searchUser, setSearchUser] = useState("");
-  const [direction, setDirection] = useState("asc");
+  const [direction, setDirection] = useState("desc");
 
   useEffect(() => {
     getScores()
@@ -35,6 +41,26 @@ function ScoreBoard() {
     try {
       const newDirection = direction === "desc" ? "asc" : "desc";
       const scoresByUserArr = await orderByName(newDirection);
+      setScores(scoresByUserArr);
+      setDirection(newDirection);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async function handleSortByScore() {
+    try {
+      const newDirection = direction === "desc" ? "asc" : "desc";
+      const scoresByUserArr = await orderByScore(newDirection);
+      setScores(scoresByUserArr);
+      setDirection(newDirection);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async function handleSortByDate() {
+    try {
+      const newDirection = direction === "desc" ? "asc" : "desc";
+      const scoresByUserArr = await orderByDate(newDirection);
       setScores(scoresByUserArr);
       setDirection(newDirection);
     } catch (error) {
@@ -67,8 +93,18 @@ function ScoreBoard() {
               </button>
             </th>
 
-            <th scope="col">Scores</th>
-            <th scope="col">Date</th>
+            <th scope="col">
+              Scores{" "}
+              <button onClick={handleSortByScore} value="descending">
+                <i class="fa-solid fa-sort"></i>
+              </button>
+            </th>
+            <th scope="col">
+              Date
+              <button onClick={handleSortByDate} value="descending">
+                <i class="fa-solid fa-sort"></i>
+              </button>
+            </th>
           </tr>
         </thead>
         <tbody>

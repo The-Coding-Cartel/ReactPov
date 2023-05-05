@@ -40,13 +40,13 @@ export const orderByName = async (direction) => {
   return snapshot.docs.map((doc) => doc.data());
 };
 
-export const orderByScoreAsc = async () => {
-  const queryRef = query(scoreRef, orderBy("score", "asc"), limit(5));
+export const orderByScore = async (direction) => {
+  const queryRef = query(scoreRef, orderBy("score", direction), limit(5));
   const snapshot = await getDocs(queryRef);
   return snapshot.docs.map((doc) => doc.data());
 };
-export const orderByScoreDesc = async () => {
-  const queryRef = query(scoreRef, orderBy("score", "desc"), limit(5));
+export const orderByDate = async (direction) => {
+  const queryRef = query(scoreRef, orderBy("posted_at", direction), limit(5));
   const snapshot = await getDocs(queryRef);
   return snapshot.docs.map((doc) => doc.data());
 };
