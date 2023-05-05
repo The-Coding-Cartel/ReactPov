@@ -89,20 +89,20 @@ function ScoreBoard() {
             <th scope="col">
               User Name
               <button onClick={handleSortByName} value="descending">
-                <i class="fa-solid fa-sort"></i>
+                <i className="fa-solid fa-sort"></i>
               </button>
             </th>
 
             <th scope="col">
               Scores{" "}
               <button onClick={handleSortByScore} value="descending">
-                <i class="fa-solid fa-sort"></i>
+                <i className="fa-solid fa-sort"></i>
               </button>
             </th>
             <th scope="col">
               Date
               <button onClick={handleSortByDate} value="descending">
-                <i class="fa-solid fa-sort"></i>
+                <i className="fa-solid fa-sort"></i>
               </button>
             </th>
           </tr>
