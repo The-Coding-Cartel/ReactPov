@@ -1,11 +1,6 @@
 import { useState, useEffect } from "react";
 import moment from "moment";
-import {
-  getScores,
-  getScoresByUser,
-  orderByNameDesc,
-  orderByNameAsc,
-} from "../db";
+import { getScores, getScoresByUser, orderByName } from "../db";
 
 function toDate(seconds, nanoseconds) {
   let yourDate = moment(
@@ -18,6 +13,7 @@ function toDate(seconds, nanoseconds) {
 function ScoreBoard() {
   const [scores, setScores] = useState([]);
   const [searchUser, setSearchUser] = useState("");
+  const [direction, setDirection] = useState("asc");
 
   useEffect(() => {
     getScores()
@@ -35,22 +31,12 @@ function ScoreBoard() {
     }
   }
 
-  async function handleClickDesc() {
+  async function handleSortByName() {
     try {
-      console.log("click");
-      const scoresByUserArr = await orderByNameDesc();
+      const newDirection = direction === "desc" ? "asc" : "desc";
+      const scoresByUserArr = await orderByName(newDirection);
       setScores(scoresByUserArr);
-      console.log(scoresByUserArr);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  async function handleClickAsc() {
-    try {
-      console.log("click");
-      const scoresByUserArr = await orderByNameAsc();
-      setScores(scoresByUserArr);
-      console.log(scoresByUserArr);
+      setDirection(newDirection);
     } catch (error) {
       console.log(error);
     }
@@ -76,11 +62,8 @@ function ScoreBoard() {
             <th scope="col">#</th>
             <th scope="col">
               User Name
-              <button onClick={handleClickDesc} value="descending">
-                -
-              </button>
-              <button onClick={handleClickAsc} value="ascending">
-                +
+              <button onClick={handleSortByName} value="descending">
+                <i class="fa-solid fa-sort"></i>
               </button>
             </th>
 

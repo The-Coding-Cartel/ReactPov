@@ -34,14 +34,8 @@ export const getScoresByUser = async (username) => {
   });
 };
 
-export const orderByNameDesc = async () => {
-  const queryRef = query(scoreRef, orderBy("username", "desc"), limit(5));
-  const snapshot = await getDocs(queryRef);
-  return snapshot.docs.map((doc) => doc.data());
-};
-
-export const orderByNameAsc = async () => {
-  const queryRef = query(scoreRef, orderBy("username", "asc"), limit(5));
+export const orderByName = async (direction) => {
+  const queryRef = query(scoreRef, orderBy("username", direction), limit(5));
   const snapshot = await getDocs(queryRef);
   return snapshot.docs.map((doc) => doc.data());
 };
