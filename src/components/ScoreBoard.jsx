@@ -1,14 +1,6 @@
 import { useState, useEffect } from "react";
-import {
-  collection,
-  query,
-  orderBy,
-  limit,
-  getDocs,
-  where,
-} from "@firebase/firestore";
-import { firestore } from "../firebase";
 import moment from "moment";
+import { getTopScores, getScoresByUser } from "../db";
 
 function toDate(seconds, nanoseconds) {
   let yourDate = moment(
@@ -23,37 +15,19 @@ function ScoreBoard() {
   const [searchUser, setSearchUser] = useState("");
 
   useEffect(() => {
-    const scoreRef = collection(firestore, "scores");
-    const get10BestScores = query(
-      scoreRef,
-      orderBy("score", "desc"),
-      limit(20)
-    );
-
-    getDocs(get10BestScores)
-      .then((querySnapshot) => {
-        const highScoresArr = querySnapshot.docs.map((doc) => doc.data());
-        setHighScores(highScoresArr);
-      })
+    getTopScores()
+      .then((scores) => setHighScores(scores))
       .catch((error) => console.log(error));
   }, []);
 
-  function handleSubmit(e) {
-    const user = searchUser;
-    const endUser = user + "/uf8ff";
+  async function handleSubmit(e) {
     e.preventDefault();
-    const scoreRef = collection(firestore, "scores");
-    const getScoresByUsers = query(
-      scoreRef,
-      where("username", ">=", searchUser),
-      where("username", "<", endUser)
-    );
-    getDocs(getScoresByUsers)
-      .then((querySnapshot) => {
-        const scoresByUserArr = querySnapshot.docs.map((doc) => doc.data());
-        setHighScores(scoresByUserArr);
-      })
-      .catch((error) => console.log(error));
+    try {
+      const scoresByUserArr = await getScoresByUser(searchUser);
+      setHighScores(scoresByUserArr);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -70,7 +44,7 @@ function ScoreBoard() {
         />
         <button>Go</button>
       </form>
-      <table class="table" id="">
+      <table className="table" id="">
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -80,14 +54,13 @@ function ScoreBoard() {
           </tr>
         </thead>
         <tbody>
-          {highScores.map((scores, index) => (
-            // <tr key={scores.posted_at.nanoseconds}>
-            <tr>
+          {highScores.map((score, index) => (
+            <tr key={index}>
               <th scope="row">{index + 1}</th>
-              <td>{scores.username}</td>
-              <td>{scores.score}</td>
+              <td>{score.username}</td>
+              <td>{score.score}</td>
               <td>
-                {/* {toDate(scores.posted_at.seconds, scores.posted_at.nanoseconds)} */}
+                {/* {toDate(score.posted_at.seconds, score.posted_at.nanoseconds)} */}
               </td>
             </tr>
           ))}

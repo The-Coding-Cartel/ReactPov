@@ -1,13 +1,6 @@
 import { useState, useEffect } from "react";
-import {
-  collection,
-  query,
-  orderBy,
-  limit,
-  getDocs,
-} from "@firebase/firestore";
-import { firestore } from "../firebase";
 import moment from "moment";
+import { getTopScores } from "../db";
 
 function toDate(seconds, nanoseconds) {
   let yourDate = moment(
@@ -21,14 +14,8 @@ function toDate(seconds, nanoseconds) {
 function HighScoreBoard() {
   const [highScores, setHighScores] = useState([]);
   useEffect(() => {
-    const scoreRef = collection(firestore, "scores");
-    const get10BestScores = query(scoreRef, orderBy("score", "desc"), limit(5));
-
-    getDocs(get10BestScores)
-      .then((querySnapshot) => {
-        const highScoresArr = querySnapshot.docs.map((doc) => doc.data());
-        setHighScores(highScoresArr);
-      })
+    getTopScores()
+      .then((scores) => setHighScores(scores))
       .catch((error) => console.log(error));
   }, []);
 
