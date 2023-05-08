@@ -32,7 +32,7 @@ export class GameScene extends Phaser.Scene {
     this.raycaster = null;
     this.ray = null;
 
-    this.fov = -30;
+    this.fov = -45;
     this.playerAngle = 0;
     this.keyPress = false;
   }
@@ -210,7 +210,6 @@ export class GameScene extends Phaser.Scene {
     const ghostsArray = this.ghostGroup.getChildren();
     if (!this.hasHit) {
       this.playerMovement(this.cursors);
-      console.log(this.player.body.speed);
       this.updateRaycaster();
     }
     ghostsArray.forEach((ghost) => {
@@ -455,6 +454,8 @@ export class GameScene extends Phaser.Scene {
   createSquare(intersection) {
     this.graphics.clear();
 
+    let angleToCalcuate = this.fov;
+
     for (let i = 0; i < intersection.length; i++) {
       let distance = Phaser.Math.Distance.Between(
         this.ray.origin.x,
@@ -463,20 +464,22 @@ export class GameScene extends Phaser.Scene {
         intersection[i]?.y || 0
       );
 
-      let ca = this.playerAngle - this.fov;
-      ca = ca * 0.0174533;
+      let ca = this.playerAngle - angleToCalcuate;
+      console.log(this.playerAngle, 'player angle')
+
+      ca = ca * 0.0174532925;
 
       if (ca < 0) {
-        ca += 2 * Math.PI;
+            ca += 2 * Math.PI;
       }
 
       if (ca > 2 * Math.PI) {
-        ca -= 2 * Math.PI;
+            ca -= 2 * Math.PI;
       }
 
-      // let adjustedDistance = distance * Math.cos(ca);  -- Fish Eye
+      let adjustedDistance = distance * Math.cos(ca);
 
-      let inverse = (32 * 320) / distance;
+      let inverse = (32 * 320) / adjustedDistance;
       if (intersection[i].object.type === "TilemapLayer") {
         const inverseClamp = Math.floor(Phaser.Math.Clamp(inverse, 0, 255));
 
@@ -513,6 +516,7 @@ export class GameScene extends Phaser.Scene {
           Phaser.Math.Clamp(-inverse, -496, 0)
         );
       }
+      angleToCalcuate += 0.1875;
     }
   }
 
@@ -537,7 +541,7 @@ export class GameScene extends Phaser.Scene {
     }
     this.fov = this.playerAngle - 45;
     this.ray.setOrigin(this.player.x, this.player.y);
-
+    
     this.createSquare(intersections);
   }
 
