@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import ScoreLabel from "../ui/scoreLabel";
+import DistanceLabel from "../ui/distanceLabel";
 import GhostSpawner from "../assets/ghostSpawner";
 import {
   addDoc,
@@ -15,7 +16,7 @@ import { firestore } from "../../firebase";
 export class GameScene extends Phaser.Scene {
   constructor() {
     super("gameScene");
-
+    this.distanceLabel = null;
     this.scoreLabel = null;
     this.ghostSpawner = null;
     this.ghostGroup = null;
@@ -115,10 +116,9 @@ export class GameScene extends Phaser.Scene {
   }
 
   create(data) {
-    this.add.rectangle(0, 0, this.canvas.width * 2, 540, 0x00cccc);
-    this.add.rectangle(0, 540, this.canvas.width * 2, 540, 0xdddddd);
+    this.add.rectangle(0, 0, this.canvas.width * 2, 540, 0x363831);
+    this.add.rectangle(0, 540, this.canvas.width * 2, 540, 0x202615);
     this.graphics = this.add.graphics();
-    this.collectGraphics = this.add.graphics();
 
     const newMap = this.make.tilemap({
       key: `tilemap${this.currentLevel}`,
@@ -131,7 +131,7 @@ export class GameScene extends Phaser.Scene {
       .setVisible(false);
 
     this.coins = this.physics.add.staticGroup();
-    this.powerPills = this.physics.add.staticGroup();
+
     this.ghostSpawner = new GhostSpawner(this, "ghost");
     this.ghostGroup = this.ghostSpawner.group.setVisible(false);
 
@@ -153,18 +153,19 @@ export class GameScene extends Phaser.Scene {
           );
           break;
         case 5:
-          let currentGhost = this.ghostSpawner.spawn(
+          this.ghostSpawner.spawn(
             tile.pixelX + tile.width / 2,
             tile.pixelY + tile.width / 2
           );
 
           break;
         case 6:
-          this.powerPills.create(
+          this.powerPills = this.physics.add.sprite(
             tile.pixelX + tile.width / 2,
             tile.pixelY + tile.width / 2,
             "powerPill"
           );
+
           break;
         default:
           break;
@@ -178,10 +179,15 @@ export class GameScene extends Phaser.Scene {
     this.player.setBounce(0);
     this.player.setDrag(0);
     this.player.setVisible(false);
-    this.scoreLabel = this.createScoreLabel(16, 16, data.score || 0);
+    this.distanceLabel = this.createDistanceLabel(this.canvas.width / 2, 16, 0);
+    this.scoreLabel = this.createScoreLabel(
+      this.canvas.width / 2,
+      48,
+      data.score || 0
+    );
     this.music = this.sound.add("background-music", {
       loop: true,
-      volume: 0.5,
+      volume: 0.3,
     });
     this.music.play();
 
@@ -231,6 +237,12 @@ export class GameScene extends Phaser.Scene {
     ghostsArray.forEach((ghost) => {
       this.enemyMovement(ghost);
     });
+    this.distanceLabel.calcDist(
+      this.player.x,
+      this.player.y,
+      this.powerPills.x,
+      this.powerPills.y
+    );
   }
 
   createPlayer(xPos, yPos) {
@@ -335,13 +347,6 @@ export class GameScene extends Phaser.Scene {
         ghost.setVelocityX(speed);
         break;
     }
-
-    const ghostDistance = Phaser.Math.Distance.Between(
-      this.player.x,
-      this.player.y,
-      ghost.x,
-      ghost.y
-    );
   }
 
   collectCoin(player, coin) {
@@ -350,7 +355,9 @@ export class GameScene extends Phaser.Scene {
   }
 
   collectPowerPill(player, powerPill) {
+    this.powerPills.disableBody(true, true);
     if (this.currentLevel < 5) {
+      this.scoreLabel.add(10);
       this.add
         .text(
           this.cameras.main.width / 2,
@@ -430,7 +437,13 @@ export class GameScene extends Phaser.Scene {
 
   createScoreLabel(x, y, score) {
     const style = { fontSize: "32px", fill: "#000" };
-    const label = new ScoreLabel(this, 350, y, score, style).setOrigin(0.5);
+    const label = new ScoreLabel(this, x, y, score, style).setOrigin(0.5);
+    this.add.existing(label);
+    return label;
+  }
+  createDistanceLabel(x, y, distance) {
+    const style = { fontSize: "32px", fill: "#000" };
+    const label = new DistanceLabel(this, x, y, distance, style).setOrigin(0.5);
     this.add.existing(label);
     return label;
   }
@@ -497,7 +510,7 @@ export class GameScene extends Phaser.Scene {
       if (intersection[i].object.type === "TilemapLayer") {
         const inverseClamp = Math.floor(Phaser.Math.Clamp(inverse, 0, 255));
 
-        const hex = this.RGBtoHex(inverseClamp, 0, 0);
+        const hex = this.RGBtoHex(0, 0, inverseClamp);
         this.graphics.lineStyle(5, 0xff00ff, 1.0);
         this.graphics.fillStyle(Number(hex));
         this.graphics.fillRect(
@@ -514,7 +527,7 @@ export class GameScene extends Phaser.Scene {
         );
       } else if (intersection[i].object.type !== "TilemapLayer") {
         const inverseClamp = Math.floor(Phaser.Math.Clamp(inverse, 0, 255));
-        const hex = this.RGBtoHex(0, inverseClamp, 0);
+        const hex = this.RGBtoHex(inverseClamp, 0, 0);
         this.graphics.lineStyle(5, 0xff00ff, 1.0);
         this.graphics.fillStyle(Number(hex));
         this.graphics.fillRect(
