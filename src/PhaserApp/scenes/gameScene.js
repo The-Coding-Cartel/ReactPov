@@ -358,6 +358,7 @@ export class GameScene extends Phaser.Scene {
 
   collectPowerPill(player, powerPill) {
     this.powerPills.disableBody(true, true);
+    this.player.disableBody(true, true);
     if (this.currentLevel < 5) {
       this.scoreLabel.add(10);
       this.add
