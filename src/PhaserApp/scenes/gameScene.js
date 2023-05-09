@@ -35,8 +35,10 @@ export class GameScene extends Phaser.Scene {
     this.fov = -45;
     this.playerAngle = 0;
     this.keyPress = false;
+    this.playerSpeed = 65;
   }
   init(data) {
+    this.playerSpeed = 65;
     this.hasHit = false;
     this.fov = -45;
     this.playerAngle = 0;
@@ -54,7 +56,14 @@ export class GameScene extends Phaser.Scene {
     this.cursors = this.input.keyboard.createCursorKeys();
     this.leftRotate = this.input.keyboard.addKey("Q");
     this.rightRotate = this.input.keyboard.addKey("E");
-
+    this.cursors.shift.on("down", () => {
+      this.playerSpeed = 100;
+      this.footsteps.setRate(1.5);
+    });
+    this.cursors.shift.on("up", () => {
+      this.playerSpeed = 65;
+      this.footsteps.setRate(1);
+    });
     this.cursors.up.on("up", () => {
       if (this.footsteps.isPlaying) {
         this.footsteps.stop();
@@ -231,7 +240,6 @@ export class GameScene extends Phaser.Scene {
   }
 
   playerMovement(cursors) {
-    const speed = 125 / 2;
     this.player.setVelocity(0);
     if (
       cursors.up.isDown ||
@@ -247,31 +255,31 @@ export class GameScene extends Phaser.Scene {
     if (cursors.up.isDown) {
       switch (this.playerAngle) {
         case 270:
-          this.player.setVelocityY(-speed);
+          this.player.setVelocityY(-this.playerSpeed);
           break;
         case 90:
-          this.player.setVelocityY(speed);
+          this.player.setVelocityY(this.playerSpeed);
           break;
         case 180:
-          this.player.setVelocityX(-speed);
+          this.player.setVelocityX(-this.playerSpeed);
           break;
         case 0:
-          this.player.setVelocityX(speed);
+          this.player.setVelocityX(this.playerSpeed);
           break;
       }
     } else if (cursors.down.isDown) {
       switch (this.playerAngle) {
         case 270:
-          this.player.setVelocityY(speed);
+          this.player.setVelocityY(this.playerSpeed);
           break;
         case 90:
-          this.player.setVelocityY(-speed);
+          this.player.setVelocityY(-this.playerSpeed);
           break;
         case 180:
-          this.player.setVelocityX(speed);
+          this.player.setVelocityX(this.playerSpeed);
           break;
         case 0:
-          this.player.setVelocityX(-speed);
+          this.player.setVelocityX(-this.playerSpeed);
           break;
       }
     }
@@ -279,31 +287,31 @@ export class GameScene extends Phaser.Scene {
     if (cursors.left.isDown) {
       switch (this.playerAngle) {
         case 270:
-          this.player.setVelocityX(-speed);
+          this.player.setVelocityX(-this.playerSpeed);
           break;
         case 90:
-          this.player.setVelocityX(speed);
+          this.player.setVelocityX(this.playerSpeed);
           break;
         case 180:
-          this.player.setVelocityY(speed);
+          this.player.setVelocityY(this.playerSpeed);
           break;
         case 0:
-          this.player.setVelocityY(-speed);
+          this.player.setVelocityY(-this.playerSpeed);
           break;
       }
     } else if (cursors.right.isDown) {
       switch (this.playerAngle) {
         case 270:
-          this.player.setVelocityX(speed);
+          this.player.setVelocityX(this.playerSpeed);
           break;
         case 90:
-          this.player.setVelocityX(-speed);
+          this.player.setVelocityX(-this.playerSpeed);
           break;
         case 180:
-          this.player.setVelocityY(-speed);
+          this.player.setVelocityY(-this.playerSpeed);
           break;
         case 0:
-          this.player.setVelocityY(speed);
+          this.player.setVelocityY(this.playerSpeed);
           break;
       }
     }
