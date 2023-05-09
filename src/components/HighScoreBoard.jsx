@@ -20,7 +20,7 @@ function HighScoreBoard() {
   }, []);
 
   return (
-    <section className="HighScoreBoard" id="high-score">
+    <section className="HighScoreBoard" id="high-scores">
       <h2>High Scores!</h2>
       <ol>
         {highScores.map((scores, index) => (

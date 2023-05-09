@@ -5,7 +5,9 @@ export class MenuScene extends Phaser.Scene {
   constructor() {
     super("menuScene");
 
-    this.username = auth.currentUser ? auth.currentUser.displayName : "guest";
+    this.username = auth?.currentUser.displayName
+      ? auth.currentUser.displayName
+      : "guest";
     this.background = null;
     this.playButton = null;
   }
