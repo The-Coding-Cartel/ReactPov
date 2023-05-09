@@ -15,12 +15,12 @@ import { firestore } from "../../firebase";
 export class GameScene extends Phaser.Scene {
   constructor() {
     super("gameScene");
-    this.enemyDirection = "up";
+
     this.scoreLabel = null;
     this.ghostSpawner = null;
     this.ghostGroup = null;
     this.hasHit = false;
-    this.poweredUp = false;
+
     this.username = null;
     this.wallsLayer = null;
     this.coins = null;
@@ -37,6 +37,13 @@ export class GameScene extends Phaser.Scene {
     this.keyPress = false;
   }
   init(data) {
+    this.hasHit = false;
+    this.fov = -45;
+    this.playerAngle = 0;
+    this.keyPress = false;
+    if (this.footsteps.isPlaying) {
+      this.footsteps.stop();
+    }
     if (this.music?.isPlaying) {
       this.music.stop();
     }
@@ -445,7 +452,7 @@ export class GameScene extends Phaser.Scene {
         querySnapshot.forEach((doc) => {
           highScores.push(doc.data());
         });
-        console.log(highScores);
+
         this.createHighScores(highScores);
       })
       .catch((err) => console.log(err));
@@ -465,16 +472,15 @@ export class GameScene extends Phaser.Scene {
       );
 
       let ca = this.playerAngle - angleToCalcuate;
-      console.log(this.playerAngle, 'player angle')
 
       ca = ca * 0.0174532925;
 
       if (ca < 0) {
-            ca += 2 * Math.PI;
+        ca += 2 * Math.PI;
       }
 
       if (ca > 2 * Math.PI) {
-            ca -= 2 * Math.PI;
+        ca -= 2 * Math.PI;
       }
 
       let adjustedDistance = distance * Math.cos(ca);
@@ -541,7 +547,7 @@ export class GameScene extends Phaser.Scene {
     }
     this.fov = this.playerAngle - 45;
     this.ray.setOrigin(this.player.x, this.player.y);
-    
+
     this.createSquare(intersections);
   }
 
