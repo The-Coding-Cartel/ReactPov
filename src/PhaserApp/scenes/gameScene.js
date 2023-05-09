@@ -1,3 +1,4 @@
+/* eslint-disable default-case */
 import Phaser from "phaser";
 import ScoreLabel from "../ui/scoreLabel";
 import DistanceLabel from "../ui/distanceLabel";
@@ -53,7 +54,8 @@ export class GameScene extends Phaser.Scene {
     this.currentLevel = data.level;
     this.cameras.main.setBackgroundColor("#4E68E0");
     this.username = data.username;
-
+    this.playerAngle = 0;
+    this.fov = -45;
     this.cursors = this.input.keyboard.createCursorKeys();
     this.leftRotate = this.input.keyboard.addKey("Q");
     this.rightRotate = this.input.keyboard.addKey("E");
@@ -498,9 +500,11 @@ export class GameScene extends Phaser.Scene {
 
       if (ca < 0) {
         ca += 2 * Math.PI;
+        ca += 2 * Math.PI;
       }
 
       if (ca > 2 * Math.PI) {
+        ca -= 2 * Math.PI;
         ca -= 2 * Math.PI;
       }
 
@@ -525,11 +529,30 @@ export class GameScene extends Phaser.Scene {
           2.8125,
           Phaser.Math.Clamp(-inverse, -496, 0)
         );
-      } else if (intersection[i].object.type !== "TilemapLayer") {
+      } else if (intersection[i].object.texture.key === "ghost") {
         const inverseClamp = Math.floor(Phaser.Math.Clamp(inverse, 0, 255));
         const hex = this.RGBtoHex(inverseClamp, 0, 0);
         this.graphics.lineStyle(5, 0xff00ff, 1.0);
         this.graphics.fillStyle(Number(hex));
+        this.graphics.fillRect(
+          0 + i * 2.8125,
+          262.5,
+          2.8125,
+          Phaser.Math.Clamp(inverse, 0, 496)
+        );
+        this.graphics.fillRect(
+          0 + i * 2.8125,
+          262.5,
+          2.8125,
+          Phaser.Math.Clamp(-inverse, -496, 0)
+        );
+      } else if (intersection[i].object.texture.key === "powerPill") {
+        this.graphics.lineStyle(5, 0xff00ff, 1.0);
+        this.graphics.fillStyle(
+          0xffff00,
+          Phaser.Math.Percent(distance, 1, 1000)
+        );
+
         this.graphics.fillRect(
           0 + i * 2.8125,
           262.5,
@@ -554,6 +577,7 @@ export class GameScene extends Phaser.Scene {
       collisionTiles: [2],
     });
     this.raycaster.mapGameObjects(this.ghostGroup.getChildren(), true);
+    this.raycaster.mapGameObjects(this.powerPills, false);
     this.ray.setOrigin(this.player.x, this.player.y);
     this.ray.setAngleDeg(0);
   }
