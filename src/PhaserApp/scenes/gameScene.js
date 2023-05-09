@@ -53,7 +53,8 @@ export class GameScene extends Phaser.Scene {
     this.currentLevel = data.level;
     this.cameras.main.setBackgroundColor("#4E68E0");
     this.username = data.username;
-
+    this.playerAngle = 0;
+    this.fov = -45;
     this.cursors = this.input.keyboard.createCursorKeys();
     this.leftRotate = this.input.keyboard.addKey("Q");
     this.rightRotate = this.input.keyboard.addKey("E");
@@ -498,9 +499,11 @@ export class GameScene extends Phaser.Scene {
 
       if (ca < 0) {
         ca += 2 * Math.PI;
+        ca += 2 * Math.PI;
       }
 
       if (ca > 2 * Math.PI) {
+        ca -= 2 * Math.PI;
         ca -= 2 * Math.PI;
       }
 
