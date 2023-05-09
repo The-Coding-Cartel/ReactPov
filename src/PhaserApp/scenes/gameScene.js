@@ -115,9 +115,16 @@ export class GameScene extends Phaser.Scene {
       `./maze${this.currentLevel}.json`
     );
     this.load.audio("footsteps", "./footsteps.mp3");
+    this.load.image("gameOverScreen", "./gameover.png");
   }
 
   create(data) {
+    let gameoverBG = this.add.image(0, 0, "gameOverScreen").setOrigin(0, 0);
+    this.endScreen = this.add
+      .container(0, 0, gameoverBG)
+      .setDepth(Number.MAX_VALUE);
+    this.endScreen.alpha = 0;
+
     this.add.rectangle(0, 0, this.canvas.width * 2, 540, 0x363831);
     this.add.rectangle(0, 540, this.canvas.width * 2, 540, 0x202615);
     this.graphics = this.add.graphics();
@@ -393,19 +400,13 @@ export class GameScene extends Phaser.Scene {
   }
 
   hitGhost(player, ghost) {
-    this.hasHit = true;
-    this.player.disableBody();
-    this.raycaster.removeMappedObjects(this.wallsLayer);
-    player.setTint(0xff4444);
-    this.submitScore(this.scoreLabel.score);
-    this.gameOverText = this.add
-      .text(this.canvas.width / 2, this.canvas.height / 2, "Game Over", {
-        font: "100px Arial",
-        strokeThickness: 2,
-        color: "#000000",
-        backgroundColor: "#ffffff",
+    const finalScore = this.add
+      .text(775, 325, `:${this.scoreLabel.score}`, {
+        fontSize: "100px Arial",
+        color: "#fff",
       })
-      .setOrigin(0.5);
+      .setDepth(Number.MAX_VALUE);
+    finalScore.alpha = 0;
     this.playAgain = this.add
       .text(
         this.canvas.width / 2,
@@ -418,7 +419,8 @@ export class GameScene extends Phaser.Scene {
           backgroundColor: "#ffffff",
         }
       )
-      .setOrigin(0.5);
+      .setOrigin(0.5)
+      .setDepth(Number.MAX_VALUE);
     this.playAgain.setInteractive({ useHandCursor: true });
     this.playAgain.on("pointerup", () => {
       this.music.stop();
@@ -429,6 +431,18 @@ export class GameScene extends Phaser.Scene {
         score: 0,
       });
     });
+    this.playAgain.alpha = 0;
+    this.hasHit = true;
+    this.tweens.add({
+      targets: [this.endScreen, finalScore, this.playAgain],
+      duration: 500,
+      alpha: 1,
+    });
+    this.player.disableBody();
+    this.raycaster.removeMappedObjects(this.wallsLayer);
+
+    this.submitScore(this.scoreLabel.score);
+
     this.physics.pause();
   }
 
