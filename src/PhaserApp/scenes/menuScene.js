@@ -1,13 +1,12 @@
 import Phaser from "phaser";
-import { auth, googleProvider } from "../../firebase";
-import { signInWithPopup } from "firebase/auth";
+import { auth } from "../../firebase";
 
 export class MenuScene extends Phaser.Scene {
   constructor() {
     super("menuScene");
-    this.username = "";
+
+    this.username = auth.currentUser ? auth.currentUser.displayName : "guest";
     this.background = null;
-    this.loginButton = null;
     this.playButton = null;
   }
 
@@ -38,14 +37,6 @@ export class MenuScene extends Phaser.Scene {
   }
 
   create() {
-    this.loginButton = this.add
-      .image(
-        this.cameras.main.width / 2,
-        this.cameras.main.height / 2,
-        "googleloginbutton"
-      )
-      .setScale(0.5);
-
     this.anims.create({
       key: "playButtonAnims",
       frameRate: 10,
@@ -56,23 +47,15 @@ export class MenuScene extends Phaser.Scene {
       repeat: -1,
     });
 
-    this.loginButton.setInteractive({ useHandCursor: true });
-
-    this.loginButton.on("pointerup", () => {
-      signInWithPopup(auth, googleProvider).then(({ user }) => {
-        this.username = user.displayName;
-        this.loginButton.destroy();
-        this.playButton = this.add.sprite(
-          this.cameras.main.width / 2,
-          this.cameras.main.height / 2,
-          "playButton"
-        );
-        this.playButton.play("playButtonAnims");
-        this.playButton.setInteractive({ useHandCursor: true });
-        this.playButton.on("pointerup", () => {
-          this.buttonClicked();
-        });
-      });
+    this.playButton = this.add.sprite(
+      this.cameras.main.width / 2,
+      this.cameras.main.height / 2,
+      "playButton"
+    );
+    this.playButton.play("playButtonAnims");
+    this.playButton.setInteractive({ useHandCursor: true });
+    this.playButton.on("pointerup", () => {
+      this.buttonClicked();
     });
   }
 
