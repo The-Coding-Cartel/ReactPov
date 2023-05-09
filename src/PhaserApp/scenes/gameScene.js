@@ -41,7 +41,7 @@ export class GameScene extends Phaser.Scene {
     this.fov = -45;
     this.playerAngle = 0;
     this.keyPress = false;
-    if (this.footsteps.isPlaying) {
+    if (this.footsteps?.isPlaying) {
       this.footsteps.stop();
     }
     if (this.music?.isPlaying) {
