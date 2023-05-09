@@ -20,11 +20,19 @@ function Header({ isLoggedIn, setIsLoggedIn }) {
   return (
     <header className="Header">
       <img src="/povmaze-header.png" alt="POVMAZE!"></img>
-      <div id="user-icon">User</div>
+
+      <div id="user-icon">
+        {isLoggedIn && (
+          <div>
+            {" "}
+            <p>{user.displayName}</p> <img src={user.photoURL} alt="" />
+          </div>
+        )}
+      </div>
       {isLoggedIn && <button onClick={() => handleSignOut()}>Logout</button>}
       {!isLoggedIn && (
         <button onClick={handleGoogleLogin}>
-          <span>Login with Google</span>
+          <img id="google" src="\googleloginbutton.png"></img>
         </button>
       )}
 
