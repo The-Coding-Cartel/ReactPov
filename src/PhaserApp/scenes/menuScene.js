@@ -30,7 +30,7 @@ export class MenuScene extends Phaser.Scene {
     this.load.image("coin", "./coin.png");
     this.load.image("ghost", "./ghost.png");
     this.load.image("powerPill", "./powerPill.png");
-    this.load.audio("background-music", "./background.wav");
+    this.load.audio("background-music", "./background.mp3");
     this.load.spritesheet("playButton", "./playButtonSpriteSheet.png", {
       frameWidth: 391,
       frameHeight: 160,
