@@ -8,11 +8,20 @@
 
 .Nav {
   border: 1px solid black;
-  margin: 5px;
-  padding: 1rem;
-  background-color: crimson;
+  flex-direction: column;
+  color: #fff;
 }
 
+.navbar-light .navbar-nav .nav-link {
+  color: rgb(255 255 255 / 55%);
+}
+.Instruction {
+  align-items: center;
+  color: white;
+  text-align: center;
+  height: 750px;
+  background-image: url("https://img.freepik.com/free-photo/grunge-scratched-cracked-texture-background_1048-15879.jpg?w=1380&t=st=1683301556~exp=1683302156~hmac=a26b2bccb53cb8030fd2d4f6e244c9d2d9306b7fcd0e05236c25c0218dfe6631");
+}
 #root-id {
   background-image: url("https://img.freepik.com/free-photo/grunge-scratched-cracked-texture-background_1048-15879.jpg?w=1380&t=st=1683301556~exp=1683302156~hmac=a26b2bccb53cb8030fd2d4f6e244c9d2d9306b7fcd0e05236c25c0218dfe6631");
 }
