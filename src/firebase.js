@@ -4,12 +4,12 @@ import { getFirestore } from "@firebase/firestore";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDtGtQmF17ZLnumY165DBuFy6GlKqZKv-U",
-  authDomain: "povman-3d5f5.firebaseapp.com",
-  projectId: "povman-3d5f5",
-  storageBucket: "povman-3d5f5.appspot.com",
-  messagingSenderId: "55007516442",
-  appId: "1:55007516442:web:cff06a96b5b0ceba8bbea3",
+  apiKey: process.env.REACT_APP_API_KEY,
+  authDomain: "povmaze.firebaseapp.com",
+  projectId: "povmaze",
+  storageBucket: "povmaze.appspot.com",
+  messagingSenderId: "435801376958",
+  appId: process.env.REACT_APP_APP_ID,
 };
 const app = initializeApp(firebaseConfig);
 

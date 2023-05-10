@@ -1,15 +1,37 @@
 import Nav from "./Nav";
 import { auth, googleProvider } from "../firebase";
-import { signInWithPopup, signOut, signInAnonymously } from "firebase/auth";
+import {
+  signInWithPopup,
+  signOut,
+  signInAnonymously,
+  onAuthStateChanged,
+} from "firebase/auth";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
+import Cookies from "js-cookie";
 
 function Header({ isLoggedIn, setIsLoggedIn, user, setUser }) {
+  const firebaseToken = Cookies.get("firebaseToken");
+
+  if (firebaseToken) {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user);
+        setIsLoggedIn(true);
+      } else {
+        setUser(null);
+        setIsLoggedIn(false);
+      }
+    });
+  }
   function handleGoogleLogin() {
     try {
       signInWithPopup(auth, googleProvider).then(({ user }) => {
         setUser(user);
         setIsLoggedIn(true);
+        user.getIdToken().then((idToken) => {
+          Cookies.set("firebaseToken", idToken, { expires: 1 });
+        });
       });
     } catch (err) {
       console.log(err.message);
@@ -19,12 +41,19 @@ function Header({ isLoggedIn, setIsLoggedIn, user, setUser }) {
     signInAnonymously(auth).then(({ user }) => {
       setUser(user);
       setIsLoggedIn(true);
+      console.log(user);
+      user.getIdToken().then((idToken) => {
+        Cookies.set("firebaseToken", idToken, { expires: 1 });
+      });
     });
   }
 
   function handleSignOut() {
-    signOut(auth).then(setIsLoggedIn(false));
-    setUser(null);
+    signOut(auth).then(() => {
+      setIsLoggedIn(false);
+      Cookies.remove("firebaseToken");
+      setUser(null);
+    });
   }
 
   return (
@@ -39,8 +68,10 @@ function Header({ isLoggedIn, setIsLoggedIn, user, setUser }) {
           </div>
         )}
       </div>
-      {isLoggedIn && <button onClick={() => handleSignOut()}>Logout</button>}
-      {!isLoggedIn && (
+      {(isLoggedIn || localStorage.user) && (
+        <button onClick={() => handleSignOut()}>Logout</button>
+      )}
+      {!isLoggedIn && !localStorage.user && (
         <div>
           <button onClick={handleGoogleLogin}>
             <FontAwesomeIcon icon={faGoogle} /> Log in with google
