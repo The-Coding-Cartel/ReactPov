@@ -21,7 +21,7 @@ function Instruction() {
         player will need to be strategic and use their wits to make it to the
         end.
       </p>
-      <img src="\coding cartel.png" alt=""></img>
+      <img src="\coding_cartel.png" alt=""></img>
     </div>
   );
 }
