@@ -22,7 +22,7 @@ export class GameScene extends Phaser.Scene {
     this.ghostSpawner = null;
     this.ghostGroup = null;
     this.hasHit = false;
-
+    this.levelEnd = null;
     this.username = null;
     this.wallsLayer = null;
     this.coins = null;
@@ -42,6 +42,7 @@ export class GameScene extends Phaser.Scene {
   init(data) {
     this.playerSpeed = 65;
     this.hasHit = false;
+    this.levelEnd = false;
     this.fov = -45;
     this.playerAngle = 0;
     this.keyPress = false;
@@ -205,7 +206,7 @@ export class GameScene extends Phaser.Scene {
     this.music.play();
     this.heartbeatAudio = this.sound.add("heartbeat", {
       loop: true,
-      volume: 0.9,
+      volume: 0.6,
     });
     this.heartbeatAudio.play();
 
@@ -268,8 +269,11 @@ export class GameScene extends Phaser.Scene {
       1,
       100
     );
-
-    this.heartbeatAudio.setRate(1.2 + tempoModifier);
+    if (!this.levelEnd) {
+      this.heartbeatAudio.setRate(1.2 + tempoModifier);
+    } else {
+      this.heartbeatAudio.setRate(1);
+    }
   }
 
   createPlayer(xPos, yPos) {
@@ -384,6 +388,7 @@ export class GameScene extends Phaser.Scene {
   collectPowerPill(player, powerPill) {
     this.powerPills.disableBody(true, true);
     this.player.disableBody(true, true);
+    this.levelEnd = true;
     if (this.currentLevel < 5) {
       this.scoreLabel.add(10);
       this.add
@@ -413,6 +418,7 @@ export class GameScene extends Phaser.Scene {
         loop: false,
       });
     } else {
+      this.scoreLabel.add(500);
       this.hitGhost(this.player);
     }
   }
