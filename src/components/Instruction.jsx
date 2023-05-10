@@ -1,15 +1,26 @@
 function Instruction() {
   return (
     <div className="Instruction">
-      Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-      Lorem Ipsum has been the industry's standard dummy text ever since the
-      1500s, when an unknown printer took a galley of type and scrambled it to
-      make a type specimen book. It has survived not only five centuries, but
-      also the leap into electronic typesetting, remaining essentially
-      unchanged. It was popularised in the 1960s with the release of Letraset
-      sheets containing Lorem Ipsum passages, and more recently with desktop
-      publishing software like Aldus PageMaker including versions of Lorem
-      Ipsum.{" "}
+      <h2>Welcome in POVMAZE</h2>{" "}
+      <p>
+        POVMAZE is a first-person game where the player's view is from within
+        the maze. To start game please log in with your google account or use
+        the anonymous option{" "}
+      </p>
+      <p>
+        {" "}
+        The controls for the game are as follows: Use the arrow keys to move
+        forward, back, left, and right. Press A to turn left, and D to turn
+        right. Hold down the Shift key to sprint.
+      </p>
+      <p>
+        The player must navigate through the maze to reach the end. Along the
+        way, they will encounter obstacles and challenges that they must
+        overcome to progress. The game is designed to be challenging, so the
+        player will need to be strategic and use their wits to make it to the
+        end.
+      </p>
+      <img src="\coding cartel.png" alt=""></img>
     </div>
   );
 }

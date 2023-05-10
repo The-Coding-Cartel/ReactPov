@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  font-family: "Metal Mania", cursive;
 }
 
 .Header {
@@ -20,7 +21,11 @@
   color: white;
   text-align: center;
   height: 750px;
+  padding: 10rem;
   background-image: url("https://img.freepik.com/free-photo/grunge-scratched-cracked-texture-background_1048-15879.jpg?w=1380&t=st=1683301556~exp=1683302156~hmac=a26b2bccb53cb8030fd2d4f6e244c9d2d9306b7fcd0e05236c25c0218dfe6631");
+}
+.Instruction img {
+  height: 20rem;
 }
 #root-id {
   background-image: url("https://img.freepik.com/free-photo/grunge-scratched-cracked-texture-background_1048-15879.jpg?w=1380&t=st=1683301556~exp=1683302156~hmac=a26b2bccb53cb8030fd2d4f6e244c9d2d9306b7fcd0e05236c25c0218dfe6631");
