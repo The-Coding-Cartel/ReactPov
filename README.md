@@ -1,70 +1,42 @@
-# Getting Started with Create React App
+# POVMAZE
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+POVMAZE is an exciting game about escaping a maze. It is a single-player game where the player must navigate through a challenging mazes to reach the end. The game is built using [React](https://react.dev/), [Phaser](https://phaser.io/) and [Firebase](https://firebase.google.com/).
 
-## Available Scripts
+Link to the hosted version [POVMAZE](https://povmaze.netlify.app/).
 
-In the project directory, you can run:
+## How to Play
 
-### `npm start`
+POVMAZE is a first-person game where the player's view is from within the maze. The controls for the game are as follows:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Use the arrow keys to move forward, back, left, and right.
+Press A to turn left, and D to turn right.
+Hold down the Shift key to sprint.
+The player must navigate through the maze to reach the end. Along the way, they will encounter obstacles and challenges that they must overcome to progress. The game is designed to be challenging, so the player will need to be strategic and use their wits to make it to the end.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Installation
+To play POVMAZE, you must have Node.js and NPM installed on your computer.
+Once you have Node.js and NPM installed, follow the steps below to install and run POVMAZE:
 
-### `npm test`
+Clone the POVMAZE repository from GitHub using the command:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+##### `git clone https://github.com/The-Coding-Cartel/ReactPov.git`
 
-### `npm run build`
+Navigate to the POVMAZE directory and install the project dependencies using the command:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+##### `npm install`
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Create a .env file in the root directory of the project and add your Firebase project credentials as follows:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+##### `REACT_APP_API_KEY=<YOUR_API_KEY>`
 
-### `npm run eject`
+##### `REACT_APP_APP_ID=<YOUR_API_KEY>`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Start the development server using the command:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+##### `npm start`
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+This will start the development server at [http://localhost:3000](http://localhost:3000), and the POVMAZE game should open in your default browser.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Credits
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+POVMAZE was created by [The-Coding-Cartel](https://github.com/The-Coding-Cartel) ([BGS89](https://github.com/BGS89), [SomeRandomGuy64](https://github.com/SomeRandomGuy64), [Entelodonto](https://github.com/Entelodonto), [gumbercules35](https://github.com/gumbercules35) & [Szpytma](https://github.com/Szpytma/)) as a final project for the Northcoders bootcamp .
