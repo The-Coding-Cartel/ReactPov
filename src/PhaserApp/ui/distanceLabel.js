@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 
 const formatDistance = (distance) =>
-  `Distance to Goal: ${Math.floor(distance)}`;
+  `Distance to Goal: ${Math.floor(distance / 10)}`;
 
 export default class DistanceLabel extends Phaser.GameObjects.Text {
   constructor(scene, x, y, distance, style) {

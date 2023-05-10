@@ -22,7 +22,7 @@ export class GameScene extends Phaser.Scene {
     this.ghostSpawner = null;
     this.ghostGroup = null;
     this.hasHit = false;
-
+    this.levelEnd = null;
     this.username = null;
     this.wallsLayer = null;
     this.coins = null;
@@ -42,6 +42,7 @@ export class GameScene extends Phaser.Scene {
   init(data) {
     this.playerSpeed = 65;
     this.hasHit = false;
+    this.levelEnd = false;
     this.fov = -45;
     this.playerAngle = 0;
     this.keyPress = false;
@@ -50,6 +51,9 @@ export class GameScene extends Phaser.Scene {
     }
     if (this.music?.isPlaying) {
       this.music.stop();
+    }
+    if (this.heartbeatAudio?.isPlaying) {
+      this.heartbeatAudio.stop();
     }
     this.currentLevel = data.level;
     this.cameras.main.setBackgroundColor("#4E68E0");
@@ -115,6 +119,8 @@ export class GameScene extends Phaser.Scene {
       `./maze${this.currentLevel}.json`
     );
     this.load.audio("footsteps", "./footsteps.mp3");
+    this.load.audio("heartbeat", "./heartbeat.mp3");
+    this.load.audio("death", "./death.mp3");
     this.load.image("gameOverScreen", "./gameover.png");
   }
 
@@ -196,10 +202,15 @@ export class GameScene extends Phaser.Scene {
     );
     this.music = this.sound.add("background-music", {
       loop: true,
-      volume: 0.3,
+      volume: 0.2,
     });
     this.music.play();
-
+    this.heartbeatAudio = this.sound.add("heartbeat", {
+      loop: true,
+      volume: 0.2,
+    });
+    this.heartbeatAudio.play();
+    this.deathAudio = this.sound.add("death", { loop: false });
     this.physics.add.overlap(
       this.player,
       this.coins,
@@ -232,7 +243,7 @@ export class GameScene extends Phaser.Scene {
       this
     );
 
-    this.footsteps = this.sound.add("footsteps", { loop: true, volume: 2 });
+    this.footsteps = this.sound.add("footsteps", { loop: true, volume: 2.5 });
 
     this.createRaycaster();
   }
@@ -252,6 +263,18 @@ export class GameScene extends Phaser.Scene {
       this.powerPills.x,
       this.powerPills.y
     );
+
+    const tempoModifier = Phaser.Math.Percent(
+      this.findClosestGhost(this.player, ghostsArray),
+      0,
+      1,
+      100
+    );
+    if (!this.levelEnd) {
+      this.heartbeatAudio.setRate(1.2 + tempoModifier);
+    } else {
+      this.heartbeatAudio.setRate(1);
+    }
   }
 
   createPlayer(xPos, yPos) {
@@ -366,6 +389,7 @@ export class GameScene extends Phaser.Scene {
   collectPowerPill(player, powerPill) {
     this.powerPills.disableBody(true, true);
     this.player.disableBody(true, true);
+    this.levelEnd = true;
     if (this.currentLevel < 5) {
       this.scoreLabel.add(10);
       this.add
@@ -395,11 +419,13 @@ export class GameScene extends Phaser.Scene {
         loop: false,
       });
     } else {
+      this.scoreLabel.add(500);
       this.hitGhost(this.player);
     }
   }
 
   hitGhost(player, ghost) {
+    this.deathAudio.play();
     const finalScore = this.add
       .text(775, 325, `:${this.scoreLabel.score}`, {
         fontSize: "100px Arial",
@@ -464,14 +490,7 @@ export class GameScene extends Phaser.Scene {
     this.add.existing(label);
     return label;
   }
-  createHighScores(scores) {
-    const style = { fontSize: "32px", fill: "#000" };
 
-    scores.forEach(({ score }, index) => {
-      const label = new ScoreLabel(this, 100, 50 + 20 * index, score, style);
-      this.add.existing(label);
-    });
-  }
   submitScore(score) {
     const scoreRef = collection(firestore, "scores");
     const highScores = [];
@@ -490,8 +509,6 @@ export class GameScene extends Phaser.Scene {
         querySnapshot.forEach((doc) => {
           highScores.push(doc.data());
         });
-
-        this.createHighScores(highScores);
       })
       .catch((err) => console.log(err));
   }
@@ -623,5 +640,22 @@ export class GameScene extends Phaser.Scene {
       this.colorToHex(green) +
       this.colorToHex(blue)
     );
+  }
+
+  findClosestGhost(player, ghostGroup) {
+    let currentClosest = Number.MAX_VALUE;
+
+    for (let ghost of ghostGroup) {
+      const calculatedDist = Phaser.Math.Distance.Between(
+        player.x,
+        player.y,
+        ghost.x,
+        ghost.y
+      );
+      if (calculatedDist < currentClosest) {
+        currentClosest = calculatedDist;
+      }
+    }
+    return currentClosest;
   }
 }
