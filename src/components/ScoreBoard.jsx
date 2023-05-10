@@ -6,6 +6,8 @@ import {
   orderByName,
   orderByScore,
   orderByDate,
+  getNextScores,
+  getPreviousScores,
 } from "../db";
 
 function toDate(seconds, nanoseconds) {
@@ -20,16 +22,69 @@ function ScoreBoard() {
   const [scores, setScores] = useState([]);
   const [searchUser, setSearchUser] = useState("");
   const [direction, setDirection] = useState("desc");
+  const [last, setLast] = useState();
+  const [first, setFirst] = useState();
+  const [count, setCount] = useState(0);
+
+  // console.log(first.data(), "<--FIRST");
+  // console.log(last.data(), "<--LAST");
 
   useEffect(() => {
     getScores()
-      .then((scores) => setScores(scores))
+      .then((snapShot) => {
+        setScores(() => {
+          return snapShot.docs.map((doc) => doc.data());
+        });
+        let lastDoc = snapShot.docs[snapShot.docs.length - 1];
+        setLast(lastDoc);
+        let firstDoc = snapShot.docs[0];
+        console.log(firstDoc);
+        setFirst(firstDoc);
+      })
       .catch((error) => console.log(error));
   }, []);
 
-  //TODO implement goToNext and goToPrevious
-  async function goToNext() {}
-  async function goToPrevious() {}
+  async function nextScores() {
+    try {
+      const snapShot = await getNextScores(last);
+      if (snapShot.docs.length > 0) {
+        setCount((currentCount) => {
+          return currentCount + 5;
+        });
+        setScores(() => {
+          return snapShot.docs.map((doc) => doc.data());
+        });
+        let lastDoc = snapShot.docs[snapShot.docs.length - 1];
+        setLast(lastDoc);
+        let firstDoc = snapShot.docs[0];
+        setFirst(firstDoc);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function previousScores() {
+    try {
+      const snapShot = await getPreviousScores(first);
+      if (snapShot.docs.length === 5) {
+        setCount((currentCount) => {
+          return currentCount - 5 <= 0 ? 0 : currentCount - 5;
+        });
+        setScores(() => {
+          const socresArr = snapShot.docs.map((doc) => doc.data());
+          const sortedArr = socresArr.sort((a, b) => b.score - a.score);
+          return sortedArr;
+        });
+        let lastDoc = snapShot.docs[0];
+        setLast(lastDoc);
+        let firstDoc = snapShot.docs[snapShot.docs.length - 1];
+        setFirst(firstDoc);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -115,7 +170,7 @@ function ScoreBoard() {
         <tbody>
           {scores.map((score, index) => (
             <tr key={index}>
-              <th scope="row">{index + 1}</th>
+              <th scope="row">{index + 1 + count}</th>
               <td>{score.username}</td>
               <td>{score.score}</td>
               <td>
@@ -128,13 +183,15 @@ function ScoreBoard() {
       <nav aria-label="Page navigation example">
         <ul className="pagination">
           <li className="page-item">
-            <button className="page-link" onClick={goToPrevious}>
-              Previous
-            </button>
+            {
+              <button className="page-link" onClick={previousScores}>
+                Previous
+              </button>
+            }
           </li>
 
           <li className="page-item load-more">
-            <button className="page-link" onClick={goToNext}>
+            <button className="page-link" onClick={nextScores}>
               Next
             </button>
           </li>
