@@ -10,6 +10,7 @@ export class TitleScene extends Phaser.Scene {
 
   preload() {
     this.load.image("googleloginbutton", "./googleloginbutton.png");
+    this.load.image("menuBG", "./povmazeMenu.png");
   }
 
   create() {
