@@ -26,6 +26,10 @@ export class MenuScene extends Phaser.Scene {
   }
 
   preload() {
+    this.load.spritesheet("audioToggle", "./audioToggle.png", {
+      frameWidth: 64,
+      frameHeight: 64,
+    });
     this.load.image("tiles", "./newTiles.png");
     this.load.image("povman", "./povman.png");
     this.load.image("coin", "./coin.png");

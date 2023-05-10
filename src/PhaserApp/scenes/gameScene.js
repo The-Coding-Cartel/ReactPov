@@ -125,6 +125,30 @@ export class GameScene extends Phaser.Scene {
   }
 
   create(data) {
+    this.anims.create({
+      key: "audioToggleOn",
+      frameRate: 0,
+      frames: this.anims.generateFrameNumbers("audioToggle", {
+        start: 0,
+        end: 0,
+      }),
+    });
+    this.audioToggler = this.add
+      .sprite(64, 64, "audioToggle")
+      .setDepth(Number.MAX_VALUE)
+      .setScale(1)
+      .setInteractive({ useHandCursor: true });
+
+    this.audioToggler.on("pointerup", () => {
+      if (this.music.isPlaying) {
+        this.music.stop();
+        this.audioToggler.setFrame(1);
+      } else {
+        this.music.play();
+        this.audioToggler.setFrame(0);
+      }
+    });
+
     let gameoverBG = this.add.image(0, 0, "gameOverScreen").setOrigin(0, 0);
     this.endScreen = this.add
       .container(0, 0, gameoverBG)
