@@ -72,10 +72,10 @@ function Header({ isLoggedIn, setIsLoggedIn, user, setUser }) {
       )}
       {!isLoggedIn && !localStorage.user && (
         <div>
-          <button onClick={handleGoogleLogin}>
+          <button className="button" onClick={handleGoogleLogin}>
             <FontAwesomeIcon icon={faGoogle} /> Log in with google
           </button>
-          <button onClick={handleAnonymousLogin}>
+          <button className="button" onClick={handleAnonymousLogin}>
             🐱‍👤Log in Anonymously
           </button>
         </div>
