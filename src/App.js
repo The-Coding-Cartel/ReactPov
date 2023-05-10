@@ -20,7 +20,19 @@ function App() {
         setUser={setUser}
       />
       {!isLoggedIn && <Instruction />}
-      {isLoggedIn && <AppBridge width={1350} height={750} />}
+      {isLoggedIn && (
+        <div>
+          {" "}
+          <AppBridge width={1350} height={750} />
+          <h3>Controls</h3>{" "}
+          <p>
+            {" "}
+            The controls for the game are as follows: Use the arrow keys to move
+            forward, back, left, and right. Press Q to turn left, and E to turn
+            right. Hold down the Shift key to sprint.
+          </p>
+        </div>
+      )}
       <HighScoreBoard />
       <ScoreBoard />
       <About />
