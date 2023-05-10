@@ -51,6 +51,9 @@ export class GameScene extends Phaser.Scene {
     if (this.music?.isPlaying) {
       this.music.stop();
     }
+    if (this.heartbeatAudio?.isPlaying) {
+      this.heartbeatAudio.stop();
+    }
     this.currentLevel = data.level;
     this.cameras.main.setBackgroundColor("#4E68E0");
     this.username = data.username;
@@ -115,6 +118,7 @@ export class GameScene extends Phaser.Scene {
       `./maze${this.currentLevel}.json`
     );
     this.load.audio("footsteps", "./footsteps.mp3");
+    this.load.audio("heartbeat", "./heartbeat.mp3");
     this.load.image("gameOverScreen", "./gameover.png");
   }
 
@@ -199,6 +203,11 @@ export class GameScene extends Phaser.Scene {
       volume: 0.3,
     });
     this.music.play();
+    this.heartbeatAudio = this.sound.add("heartbeat", {
+      loop: true,
+      volume: 0.9,
+    });
+    this.heartbeatAudio.play();
 
     this.physics.add.overlap(
       this.player,
@@ -252,6 +261,15 @@ export class GameScene extends Phaser.Scene {
       this.powerPills.x,
       this.powerPills.y
     );
+
+    const tempoModifier = Phaser.Math.Percent(
+      this.findClosestGhost(this.player, ghostsArray),
+      0,
+      1,
+      100
+    );
+
+    this.heartbeatAudio.setRate(1.2 + tempoModifier);
   }
 
   createPlayer(xPos, yPos) {
@@ -623,5 +641,22 @@ export class GameScene extends Phaser.Scene {
       this.colorToHex(green) +
       this.colorToHex(blue)
     );
+  }
+
+  findClosestGhost(player, ghostGroup) {
+    let currentClosest = Number.MAX_VALUE;
+
+    for (let ghost of ghostGroup) {
+      const calculatedDist = Phaser.Math.Distance.Between(
+        player.x,
+        player.y,
+        ghost.x,
+        ghost.y
+      );
+      if (calculatedDist < currentClosest) {
+        currentClosest = calculatedDist;
+      }
+    }
+    return currentClosest;
   }
 }
