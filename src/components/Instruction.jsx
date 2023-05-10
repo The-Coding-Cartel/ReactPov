@@ -7,10 +7,11 @@ function Instruction() {
         the maze. To start game please log in with your google account or use
         the anonymous option{" "}
       </p>
+      <h3>Controls</h3>
       <p>
         {" "}
         The controls for the game are as follows: Use the arrow keys to move
-        forward, back, left, and right. Press A to turn left, and D to turn
+        forward, back, left, and right. Press Q to turn left, and E to turn
         right. Hold down the Shift key to sprint.
       </p>
       <p>
