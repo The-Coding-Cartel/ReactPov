@@ -41,7 +41,6 @@ function Header({ isLoggedIn, setIsLoggedIn, user, setUser }) {
     signInAnonymously(auth).then(({ user }) => {
       setUser(user);
       setIsLoggedIn(true);
-      console.log(user);
       user.getIdToken().then((idToken) => {
         Cookies.set("firebaseToken", idToken, { expires: 1 });
       });

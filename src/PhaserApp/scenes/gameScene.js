@@ -613,7 +613,7 @@ export class GameScene extends Phaser.Scene {
 
   colorToHex(color) {
     const hexadecimal = color.toString(16);
-    return hexadecimal.length == 1 ? "0" + hexadecimal : hexadecimal;
+    return hexadecimal.length === 1 ? "0" + hexadecimal : hexadecimal;
   }
 
   RGBtoHex(red, green, blue) {

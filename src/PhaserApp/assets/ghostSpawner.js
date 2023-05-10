@@ -1,5 +1,3 @@
-import Phaser from "phaser";
-
 export default class GhostSpawner {
   constructor(scene, ghostKey = "ghost") {
     this.scene = scene;

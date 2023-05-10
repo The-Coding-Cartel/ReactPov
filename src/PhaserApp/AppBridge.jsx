@@ -1,4 +1,4 @@
-import { memo, useEffect, useLayoutEffect, useRef } from "react";
+import { memo, useLayoutEffect, useRef } from "react";
 import { PhaserApp } from "./PhaserApp";
 
 export const ROOT_ID = "root-id";

@@ -3,9 +3,6 @@ function Nav({ isLoggedIn }) {
     <>
       <div>
         <nav className=" Nav navbar navbar-expand-sm navbar-light bg-dark ">
-          {/* <a className="navbar-brand" href="#root-id">
-            Navbar
-          </a> */}
           <div className="navbar-nav">
             {isLoggedIn && (
               <a className="nav-link" href="#root-id">

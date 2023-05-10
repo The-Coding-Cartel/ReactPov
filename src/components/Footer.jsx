@@ -3,7 +3,7 @@ function Footer() {
   const SomeRandomGuy64 = "https://github.com/SomeRandomGuy64";
   const Entelodonto = "https://github.com/Entelodonto";
   const gumbercules35 = "https://github.com/gumbercules35";
-  const szpytmaGithub = "https://github.com/Szpytma/";
+  const szpytma = "https://github.com/Szpytma/";
   let year = new Date().getFullYear();
 
   return (
@@ -21,7 +21,7 @@ function Footer() {
       <a href={SomeRandomGuy64} target="_blank" rel="noreferrer">
         SomeRandomGuy64 &
       </a>{" "}
-      <a href={szpytmaGithub} target="_blank" rel="noreferrer">
+      <a href={szpytma} target="_blank" rel="noreferrer">
         Szpytma
       </a>{" "}
       ® {year}

@@ -26,9 +26,6 @@ function ScoreBoard() {
   const [first, setFirst] = useState();
   const [count, setCount] = useState(0);
 
-  // console.log(first.data(), "<--FIRST");
-  // console.log(last.data(), "<--LAST");
-
   useEffect(() => {
     getScores()
       .then((snapShot) => {
@@ -38,7 +35,6 @@ function ScoreBoard() {
         let lastDoc = snapShot.docs[snapShot.docs.length - 1];
         setLast(lastDoc);
         let firstDoc = snapShot.docs[0];
-        console.log(firstDoc);
         setFirst(firstDoc);
       })
       .catch((error) => console.log(error));
