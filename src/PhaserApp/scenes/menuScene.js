@@ -39,6 +39,12 @@ export class MenuScene extends Phaser.Scene {
   }
 
   create() {
+    let menuBackground = this.add.image(0, 0, "menuBG").setOrigin(0, 0);
+    this.bkgContainer = this.add
+      .container(0, 0, menuBackground)
+      .setDepth(Number.MAX_VALUE);
+    this.bkgContainer.alpha = 0;
+
     this.anims.create({
       key: "playButtonAnims",
       frameRate: 10,
@@ -54,6 +60,12 @@ export class MenuScene extends Phaser.Scene {
       this.cameras.main.height / 2,
       "playButton"
     );
+    this.playButton.setDepth(Number.MAX_VALUE);
+    this.tweens.add({
+      targets: [this.bkgContainer, this.playButton],
+      duration: 500,
+      alpha: 1,
+    });
     this.playButton.play("playButtonAnims");
     this.playButton.setInteractive({ useHandCursor: true });
     this.playButton.on("pointerup", () => {
