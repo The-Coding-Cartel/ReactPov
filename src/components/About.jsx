@@ -1,6 +1,6 @@
 function About() {
   return (
-    <section id="about">
+    <section id="about" className="About">
       <h1>ABOUT!</h1>
       <p>
         POVMAZE is a game built in just 7 days using React, Phaser, and
@@ -27,9 +27,16 @@ function About() {
         power of modern web technologies.
       </p>
       <p>
-        POVMAZE is a testament to the creativity and ingenuity of the team
-        behind it, who were able to build a complex and engaging game in just 7
-        days.
+        POVMAZE is a testament to the creativity and ingenuity of the{" "}
+        <a
+          href="https://github.com/The-Coding-Cartel"
+          target="_blank"
+          rel="noreferrer"
+        >
+          The Coding Cartel
+        </a>{" "}
+        team behind it, who were able to build a complex and engaging game in
+        just 7 days.
       </p>
     </section>
   );
