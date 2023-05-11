@@ -24,6 +24,14 @@ function Footer() {
       <a href={szpytma} target="_blank" rel="noreferrer">
         Szpytma
       </a>{" "}
+      <br></br>
+      <a
+        href="https://github.com/The-Coding-Cartel"
+        target="_blank"
+        rel="noreferrer"
+      >
+        The Coding Cartel
+      </a>{" "}
       ® {year}
     </footer>
   );
