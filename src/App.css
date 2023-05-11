@@ -1,10 +1,12 @@
 .App {
-  display: inline-block;
   text-align: center;
   font-family: "Metal Mania", cursive;
 }
 
 @media only screen and (max-width: 700px) {
+  .App {
+    display: inline;
+  }
   img {
     vertical-align: middle;
     display: contents;
