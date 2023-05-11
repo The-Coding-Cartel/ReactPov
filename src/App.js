@@ -11,6 +11,7 @@ import Instruction from "./components/Instruction";
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState();
+  const [isLoading, setIsLoading] = useState(true);
   return (
     <div id="App" className="App">
       <Header
@@ -34,7 +35,7 @@ function App() {
         </div>
       )}
       <HighScoreBoard />
-      <ScoreBoard />
+      <ScoreBoard isLoading={isLoading} setIsLoading={setIsLoading} />
       <About />
       <Footer />
     </div>

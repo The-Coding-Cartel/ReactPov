@@ -9,6 +9,7 @@ import {
   getNextScores,
   getPreviousScores,
 } from "../db";
+import LoadingSpinner from "./LoadingSpinner";
 
 function toDate(seconds, nanoseconds) {
   let yourDate = moment(
@@ -18,7 +19,7 @@ function toDate(seconds, nanoseconds) {
   return yourDate;
 }
 
-function ScoreBoard() {
+function ScoreBoard({ isLoading, setIsLoading }) {
   const [scores, setScores] = useState([]);
   const [searchUser, setSearchUser] = useState("");
   const [direction, setDirection] = useState("desc");
@@ -36,9 +37,10 @@ function ScoreBoard() {
         setLast(lastDoc);
         let firstDoc = snapShot.docs[0];
         setFirst(firstDoc);
+        setIsLoading(false);
       })
       .catch((error) => console.log(error));
-  }, []);
+  }, [setIsLoading]);
 
   async function nextScores() {
     try {
@@ -124,7 +126,9 @@ function ScoreBoard() {
     }
   }
 
-  return (
+  return isLoading ? (
+    <LoadingSpinner />
+  ) : (
     <section className="ScoreBoard" id="scores">
       <form onSubmit={handleSubmit}>
         <label htmlFor="user-search">Search User: </label>
