@@ -1,10 +1,12 @@
 .App {
-  display: inline-block;
   text-align: center;
   font-family: "Metal Mania", cursive;
 }
 
 @media only screen and (max-width: 700px) {
+  .App {
+    display: inline;
+  }
   img {
     vertical-align: middle;
     display: contents;
@@ -42,8 +44,13 @@
   color: white;
   text-align: center;
   height: 750px;
-  padding: 5rem;
-  background-image: url("https://img.freepik.com/free-photo/grunge-scratched-cracked-texture-background_1048-15879.jpg?w=1380&t=st=1683301556~exp=1683302156~hmac=a26b2bccb53cb8030fd2d4f6e244c9d2d9306b7fcd0e05236c25c0218dfe6631");
+  style
+
+  padding: 10rem;
+  background-image: url("/public/grunge-scratched-cracked-texture-background.jpg");
+  background-repeat: repeat;
+  background-size: 120rem;
+  main
 }
 
 .Instruction img {
@@ -51,7 +58,9 @@
 }
 
 #root-id {
-  background-image: url("https://img.freepik.com/free-photo/grunge-scratched-cracked-texture-background_1048-15879.jpg?w=1380&t=st=1683301556~exp=1683302156~hmac=a26b2bccb53cb8030fd2d4f6e244c9d2d9306b7fcd0e05236c25c0218dfe6631");
+  background-image: url("/public/grunge-scratched-cracked-texture-background.jpg");
+  background-repeat: repeat;
+  background-size: 120rem;
 }
 #user-icon {
   border: 1px solid black;
@@ -86,6 +95,9 @@
 #root-id {
   border: 1px solid black;
   padding: 1rem;
+}
+.About a {
+  color: #222;
 }
 
 .Footer {
