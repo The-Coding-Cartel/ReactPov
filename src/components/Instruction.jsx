@@ -3,9 +3,11 @@ function Instruction() {
     <div className="Instruction">
       <h2>Welcome in POVMAZE</h2>{" "}
       <p>
-        POVMAZE is a first-person game where the player's view is from within
-        the maze. To start game please log in with your google account or use
-        the anonymous option{" "}
+        Please note that POVMAZE is a web-based game and can only be played on a
+        PC using a web browser. For the best experience, we recommend using a
+        desktop or laptop computer with a modern web browser such as Google
+        Chrome, Mozilla Firefox, or Microsoft Edge. To start game please log in
+        with your google account or use the anonymous option{" "}
       </p>
       <h3>Controls</h3>
       <p>

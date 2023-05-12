@@ -44,10 +44,13 @@
   color: white;
   text-align: center;
   height: 750px;
+  style
+
   padding: 10rem;
   background-image: url("/public/grunge-scratched-cracked-texture-background.jpg");
   background-repeat: repeat;
   background-size: 120rem;
+  main
 }
 
 .Instruction img {
