@@ -1,8 +1,10 @@
 # POVMAZE
 
-POVMAZE is an exciting game about escaping a maze. It is a single-player game where the player must navigate through a challenging mazes to reach the end. The game is built using [React](https://react.dev/), [Phaser](https://phaser.io/) and [Firebase](https://firebase.google.com/).
+POVMAZE is an exciting game about escaping a maze. It is a single-player game where the player must navigate challenging mazes to reach the end. The game is built using [React](https://react.dev/), [Phaser](https://phaser.io/) and [Firebase](https://firebase.google.com/).
 
 Link to the hosted version [POVMAZE](https://povmaze.netlify.app/).
+
+[More information about the project and the team.](https://northcoders.com/projects/may-2023/povmaze)
 
 ## **_How to Play_**
 
@@ -11,7 +13,7 @@ POVMAZE is a first-person game where the player's view is from within the maze. 
 Use the arrow keys to move forward, back, left, and right.
 Press Q to turn left, and E to turn right.
 Hold down the Shift key to sprint.
-The player must navigate through the maze to reach the end. Along the way, they will encounter obstacles and challenges that they must overcome to progress. The game is designed to be challenging, so the player will need to be strategic and use their wits to make it to the end.
+The player must navigate through the maze to reach the end. Along the way, they will encounter obstacles and challenges that they must overcome to progress. The game is designed to be challenging, so the player must be strategic and use their wits to make it to the end.
 
 ## **Installation**
 
