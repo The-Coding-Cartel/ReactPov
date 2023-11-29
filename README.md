@@ -43,4 +43,4 @@ This will start the development server at [http://localhost:3000](http://localho
 
 ## Credits
 
-POVMAZE was created by [The-Coding-Cartel](https://github.com/The-Coding-Cartel) ([BGS89](https://github.com/BGS89), [SomeRandomGuy64](https://github.com/SomeRandomGuy64), [Entelodonto](https://github.com/Entelodonto), [gumbercules35](https://github.com/gumbercules35) & [Szpytma](https://github.com/Szpytma/)) as a final project for the [Northcoders](https://northcoders.com/) bootcamp.
+POVMAZE was created by [The-Coding-Cartel](https://github.com/The-Coding-Cartel) ([BGS89](https://github.com/BGS89), [SomeRandomGuy64](https://github.com/SomeRandomGuy64), [CodeCanto](https://github.com/CodeCanto), [gumbercules35](https://github.com/gumbercules35) & [Szpytma](https://github.com/Szpytma/)) as a final project for the [Northcoders](https://northcoders.com/) bootcamp.
